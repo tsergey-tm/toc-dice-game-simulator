@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {GameContextProvider, InitParams} from "./GameContext";
+import {GameParamsEditor, GameRunEvent} from "./GameParamsEditor";
+import {GameResult, GameResultContextProvider, SetGameResult} from "./GameResultContext";
+import {GameRunner} from "./Game";
+import {GameTable} from "./GameTable";
+import {LastGameGraph} from "./LastGameGraph";
+import {TotalGameGraph} from "./TotalGameGraph";
+import {PredefinedGames} from "./PredefinedGames";
+
+const runGame: GameRunEvent = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult) => {
+    new GameRunner(initParams, gameResult, setGameResult).run();
+}
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <GameResultContextProvider>
+                <GameContextProvider>
+                    <PredefinedGames/>
+                    <GameParamsEditor runGame={runGame}/>
+                    <TotalGameGraph/>
+                    <LastGameGraph/>
+                    <GameTable/>
+                </GameContextProvider>
+            </GameResultContextProvider>
+        </div>
+    );
 }
 
 export default App;

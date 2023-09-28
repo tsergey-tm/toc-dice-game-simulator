@@ -1,0 +1,75 @@
+.GameTable {
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+    margin: 0.2em;
+    border-spacing: 0;
+}
+
+.GameTable > thead > tr:first-child > th:first-child {
+    padding: 0.5em;
+    border-width: 0;
+    border-color: black;
+    border-style: solid;
+}
+
+.GameTable > thead > tr:first-child > th {
+    padding: 0.5em;
+    border-width: 0 0 0 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+.GameTable > thead > tr > th:first-child {
+    padding: 0.5em;
+    border-width: 1px 0 0 0;
+    border-color: black;
+    border-style: solid;
+    vertical-align: top;
+}
+
+.GameTable > thead > tr > th {
+    padding: 0.5em;
+    border-width: 1px 0 0 1px;
+    border-color: black;
+    border-style: solid;
+    vertical-align: top;
+}
+
+.GameTable > tbody > tr > td:first-child {
+    padding: 0.5em;
+    border-width: 1px 0 0 0;
+    border-color: black;
+    border-style: solid;
+}
+
+.GameTable > tbody > tr > td {
+    padding: 0.5em;
+    border-width: 1px 0 0 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+.gridCount {
+    color: limegreen;
+}
+
+.gridBgBad {
+    background-color: rgba(191, 0, 64, 0.1);
+}
+
+.gridBgFail {
+    background-color: rgba(0, 48, 191, 0.1);
+}
+
+.gridBgMid {
+    background-color: rgba(191, 179, 0, 0.1);
+}
+
+.gridBgGood {
+    background-color: rgba(49, 204, 49, 0.1);
+}
+
+.gridMay {
+    color: darkred;
+}

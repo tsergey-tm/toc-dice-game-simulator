@@ -1,0 +1,50 @@
+.GameParamsEditorAdder {
+    vertical-align: middle;
+}
+
+.GameParamsEditorAdder > span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.GameParamsEditorAdder ul {
+    display: none;
+    position: absolute;
+    border: 1px solid #888;
+    z-index: 1;
+    list-style-type: none;
+    background-color: #cccccc;
+    margin: 0.1em; /* Отступ слева в браузере IE и Opera */
+    padding: 0.1em; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+
+.GameParamsEditorAdder:hover ul {
+    display: block;
+}
+
+.GameParamsEditorAdder li {
+    cursor: pointer;
+}
+
+.GameParamsEditorAdder li:hover {
+    background-color: #61dafb;
+}
+
+.GameParamsEditorBufferEditor,
+.GameParamsEditorProcessorEditor,
+.GameParamsEditorForkliftEditor {
+    border: 1px solid #888;
+    border-radius: 3px;
+    margin: 0.1em;
+    padding: 0.1em;
+}
+
+.Delete {
+    cursor: pointer;
+    font-size: larger;
+}
+
+.Error {
+    background-color: tomato;
+}

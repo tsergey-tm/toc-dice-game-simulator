@@ -1,0 +1,23 @@
+.GameParamsEditorActiveEditor {
+    border: 2px solid #ccf;
+    border-radius: 3px;
+    margin: 0.2em;
+    padding: 0.2em;
+    display: flex;
+}
+
+.GameParamsEditorInactiveEditor {
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    margin: 0.2em;
+    padding: 0.2em;
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.GameParamsEditorBox {
+    border: 1px solid #888;
+    border-radius: 3px;
+    margin: 0.1em;
+    padding: 0.1em;
+}
