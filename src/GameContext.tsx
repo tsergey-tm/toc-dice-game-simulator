@@ -36,6 +36,10 @@ export abstract class PlaceParam {
     public abstract validate(): void;
 
     public abstract clone(): PlaceParam;
+
+    equals(obj: PlaceParam) {
+        return obj.type === this.type;
+    }
 }
 
 
@@ -87,6 +91,17 @@ export class BufferParam extends PlaceParam {
         res.start = this.start;
         return res;
     }
+
+    equals(obj: PlaceParam): boolean {
+
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        const obj1 = obj as BufferParam;
+
+        return obj1.limit === this.limit && obj1.start === this.start;
+    }
 }
 
 export abstract class SecondaryFromParam extends PlaceParam {
@@ -112,6 +127,16 @@ export abstract class SecondaryFromParam extends PlaceParam {
         if (this.secondaryFrom < 0) {
             this.errors.push("Неправильное значение ссылки на ведущего");
         }
+    }
+
+    equals(obj: PlaceParam): boolean {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        const obj1 = obj as SecondaryFromParam;
+
+        return obj1.secondaryFrom === this.secondaryFrom;
     }
 }
 
@@ -180,6 +205,16 @@ export class ForkliftParam extends SecondaryFromParam {
         res.stepMod = this.stepMod;
         return res;
     }
+
+    equals(obj: PlaceParam): boolean {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        const obj1 = obj as ForkliftParam;
+
+        return obj1.volume === this.volume && obj1.stepMod === this.stepMod && obj1.stepDiv === this.stepDiv;
+    }
 }
 
 export class ProcessorParam extends SecondaryFromParam {
@@ -238,6 +273,16 @@ export class ProcessorParam extends SecondaryFromParam {
         res.max = this.max;
         res.union = this.union;
         return res;
+    }
+
+    equals(obj: PlaceParam): boolean {
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        const obj1 = obj as ProcessorParam;
+
+        return obj1.min === this.min && obj1.max === this.max && obj1.union === this.union;
     }
 }
 
@@ -387,6 +432,25 @@ export class InitParams {
 
         return res;
     }
+
+    canLeaveResults(prev: InitParams) {
+
+        if (prev.iterations !== this.iterations) {
+            return false;
+        }
+
+        if (prev.placeParams.length !== this.placeParams.length) {
+            return false;
+        }
+
+        for (let i = 0; i < this.placeParams.length; i++) {
+            if (!this.placeParams[i].equals(prev.placeParams[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 export type GameContextType = {
@@ -414,15 +478,17 @@ export const GameContextProvider = ({children}: PropsWithChildren<{}>) => {
     let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + initParams.toInitString();
     window.history.pushState({path: newUrl}, '', newUrl);
 
-    const setInitParams = (initParams: InitParams) => {
-        initParams.validate();
+    const setInitParams = (newInitParams: InitParams) => {
+        newInitParams.validate();
 
-        let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + initParams.toInitString();
+        let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + newInitParams.toInitString();
         window.history.pushState({path: newUrl}, '', newUrl);
 
-        setGameResult(new GameResult());
+        if (!initParams.canLeaveResults(newInitParams)) {
+            setGameResult(new GameResult());
+        }
 
-        setInitParamsNative(initParams);
+        setInitParamsNative(newInitParams);
     }
 
     return (

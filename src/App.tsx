@@ -16,13 +16,13 @@ const runGame: GameRunEvent = (initParams: InitParams, gameResult: GameResult, s
 function App() {
     return (
         <div className="App">
-            <GameResultContextProvider>
-                <GameContextProvider>
-                    <PredefinedGames/>
-                    <GameParamsEditor runGame={runGame}/>
-                    <TotalGameGraph/>
-                    <LastGameGraph/>
-                    <GameTable/>
+            <GameResultContextProvider key="GameResultContextProvider">
+                <GameContextProvider key="GameContextProvider">
+                    <PredefinedGames key="PredefinedGames"/>
+                    <GameParamsEditor runGame={runGame} key="GameParamsEditor"/>
+                    <TotalGameGraph key="TotalGameGraph"/>
+                    <LastGameGraph key="LastGameGraph"/>
+                    <GameTable key="GameTable"/>
                 </GameContextProvider>
             </GameResultContextProvider>
         </div>

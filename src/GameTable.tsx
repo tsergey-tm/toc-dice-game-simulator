@@ -8,7 +8,7 @@ export const GameTable: FC = () => {
     const {initParams} = useGameContext();
     const {gameResult} = useGameResultContext();
 
-    return <table className="GameTable">
+    return <table className="GameTable" key="gameTable">
         <thead>
         <tr>
             <th>#</th>

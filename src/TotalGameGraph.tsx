@@ -8,7 +8,14 @@ import * as echarts from 'echarts/core';
 // Import charts, all with Chart suffix
 import {BarChart, LineChart} from 'echarts/charts';
 // import components, all suffixed with Component
-import {GridComponent, LegendComponent, TitleComponent, ToolboxComponent, TooltipComponent,} from 'echarts/components';
+import {
+    GridComponent,
+    LegendComponent,
+    MarkLineComponent,
+    TitleComponent,
+    ToolboxComponent,
+    TooltipComponent
+} from 'echarts/components';
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {CanvasRenderer,} from 'echarts/renderers';
 import {EChartsOption, SeriesOption} from "echarts";
@@ -16,7 +23,7 @@ import {EChartsOption, SeriesOption} from "echarts";
 // Register the required components
 echarts.use(
     [TitleComponent, TooltipComponent, GridComponent, BarChart, CanvasRenderer, LineChart, LegendComponent,
-        ToolboxComponent]
+        ToolboxComponent, MarkLineComponent]
 );
 
 
@@ -62,6 +69,20 @@ export const TotalGameGraph: FC = () => {
                 itemStyle: {
                     borderColor: "rgba(255,64,64,1)",
                     color: "rgba(255,64,64,0.75)",
+                },
+                markLine: {
+                    symbol: ["none", "none"],
+                    silent: true,
+                    lineStyle: {
+                        type: "dashed",
+                        color: "rgb(128,255,64)",
+                        width: 1,
+                    },
+                    data: [
+                        {
+                            xAxis: initParams.expectedThroughput,
+                        },
+                    ],
                 },
                 data: serControlData,
             },
