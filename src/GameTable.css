@@ -11,6 +11,7 @@
     border-width: 0;
     border-color: black;
     border-style: solid;
+    font-weight: normal;
 }
 
 .GameTable > thead > tr:first-child > th {
@@ -18,6 +19,7 @@
     border-width: 0 0 0 1px;
     border-color: black;
     border-style: solid;
+    font-weight: normal;
 }
 
 .GameTable > thead > tr > th:first-child {
@@ -26,6 +28,7 @@
     border-color: black;
     border-style: solid;
     vertical-align: top;
+    font-weight: normal;
 }
 
 .GameTable > thead > tr > th {
@@ -34,6 +37,7 @@
     border-color: black;
     border-style: solid;
     vertical-align: top;
+    font-weight: normal;
 }
 
 .GameTable > tbody > tr > td:first-child {

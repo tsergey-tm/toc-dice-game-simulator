@@ -1,11 +1,11 @@
-import {FC} from "react";
+import React, {FC} from "react";
 import {
     BufferParam,
     ForkliftParam,
     InitParams,
+    MoverParam,
     PlaceParam,
     ProcessorParam,
-    SecondaryFromParam,
     useGameContext
 } from "./GameContext";
 import "./StepEditor.css"
@@ -20,10 +20,10 @@ function deleteParam(newInitParams: InitParams, index: number) {
 
     for (const el of newInitParams.placeParams) {
         if (el.type === ProcessorParam.LETTER || el.type === ForkliftParam.LETTER) {
-            if ((el as SecondaryFromParam).secondaryFrom === index + 1) {
-                (el as SecondaryFromParam).secondaryFrom = 0;
-            } else if ((el as SecondaryFromParam).secondaryFrom > index) {
-                (el as SecondaryFromParam).secondaryFrom--;
+            if ((el as MoverParam).secondaryFrom === index + 1) {
+                (el as MoverParam).secondaryFrom = 0;
+            } else if ((el as MoverParam).secondaryFrom > index) {
+                (el as MoverParam).secondaryFrom--;
             }
         }
     }
@@ -43,8 +43,8 @@ export const Adder: FC<IndexParam> = (indexParam) => {
 
         for (const el of newInitParams.placeParams) {
             if (el.type === ProcessorParam.LETTER || el.type === ForkliftParam.LETTER) {
-                if ((el as SecondaryFromParam).secondaryFrom >= indexParam.index) {
-                    (el as SecondaryFromParam).secondaryFrom++;
+                if ((el as MoverParam).secondaryFrom >= indexParam.index) {
+                    (el as MoverParam).secondaryFrom++;
                 }
             }
         }
@@ -53,15 +53,15 @@ export const Adder: FC<IndexParam> = (indexParam) => {
 
 
     function addBuffer() {
-        addStep(new BufferParam().setInitStr("4,0"));
+        addStep(new BufferParam());
     }
 
     function addForklift() {
-        addStep(new ForkliftParam().setInitStr("0,100,1,1"));
+        addStep(new ForkliftParam());
     }
 
     function addProcessor() {
-        addStep(new ProcessorParam().setInitStr("0,1,6"));
+        addStep(new ProcessorParam());
     }
 
     return <div className="GameParamsEditorAdder"><span>+</span>
@@ -88,6 +88,12 @@ export const BufferEditor: FC<IndexParam> = (indexParam) => {
         setInitParams(newInitParams);
     }
 
+    function setName(value: string) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as BufferParam).name = value;
+        setInitParams(newInitParams);
+    }
+
     function delStep() {
         setInitParams(deleteParam(initParams.clone(), indexParam.index - 1));
     }
@@ -98,7 +104,12 @@ export const BufferEditor: FC<IndexParam> = (indexParam) => {
               onClick={() => delStep()}
               title="Удалить"
         >&#x267B;</span>&#32;
-        <strong>Буфер&nbsp;{indexParam.index}</strong><br/>
+        <strong>Буфер&nbsp;{indexParam.index}</strong><br/><br/>
+        Название:<br/>
+        <input type="text"
+               value={initParams.placeParams[indexParam.index - 1].name} size={10}
+               onChange={event => setName(event.target.value)}
+        /><br/><br/>
         Старт: <input type="number" value={(initParams.placeParams[indexParam.index - 1] as BufferParam).start}
                       min={0} max={1000} title="Число элементов в начале"
                       onChange={event => setStart(event.target.value)}/><br/>
@@ -137,7 +148,19 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
 
     function setSecondaryFrom(value: string) {
         let newInitParams = initParams.clone();
-        (newInitParams.placeParams[indexParam.index - 1] as SecondaryFromParam).secondaryFrom = Number(value);
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).secondaryFrom = Number(value);
+        setInitParams(newInitParams);
+    }
+
+    function setName(value: string) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).name = value;
+        setInitParams(newInitParams);
+    }
+
+    function setWorkedName(value: string) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).workersName = value;
         setInitParams(newInitParams);
     }
 
@@ -151,7 +174,20 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
               onClick={() => delStep()}
               title="Удалить"
         >&#x267B;</span>&#32;
-        <strong>Процессор&nbsp;{indexParam.index}</strong><br/>
+        <strong>Процессор&nbsp;{indexParam.index}</strong><br/><br/>
+        Название:<br/>
+        <input type="text"
+               value={initParams.placeParams[indexParam.index - 1].name} size={10}
+               onChange={event => setName(event.target.value)}
+        /><br/>
+        {((initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom === 0 ||
+                !(initParams.placeParams[indexParam.index - 1] as ProcessorParam).union) &&
+            <span>Работают:<br/>
+        <input type="text"
+               value={(initParams.placeParams[indexParam.index - 1] as MoverParam).workersName} size={10}
+               onChange={event => setWorkedName(event.target.value)}
+        /><br/></span>}
+        <br/>
         <select value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom}
                 onChange={e => setSecondaryFrom(e.target.value)}
                 title="Самостоятельный узел берёт настройки из параметров ниже&#13;
@@ -221,9 +257,22 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
 
     function setSecondaryFrom(value: string) {
         let newInitParams = initParams.clone();
-        (newInitParams.placeParams[indexParam.index - 1] as SecondaryFromParam).secondaryFrom = Number(value);
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).secondaryFrom = Number(value);
         setInitParams(newInitParams);
     }
+
+    function setName(value: string) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).name = value;
+        setInitParams(newInitParams);
+    }
+
+    function setWorkedName(value: string) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).workersName = value;
+        setInitParams(newInitParams);
+    }
+
 
     function delStep() {
         setInitParams(deleteParam(initParams.clone(), indexParam.index - 1));
@@ -235,7 +284,17 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
               onClick={() => delStep()}
               title="Удалить"
         >&#x267B;</span>&#32;
-        <strong>Перекладчик&nbsp;{indexParam.index}</strong><br/>
+        <strong>Перекладчик&nbsp;{indexParam.index}</strong><br/><br/>
+        Название:<br/>
+        <input type="text"
+               value={initParams.placeParams[indexParam.index - 1].name} size={10}
+               onChange={event => setName(event.target.value)}
+        /><br/>
+        Работают:<br/>
+        <input type="text"
+               value={(initParams.placeParams[indexParam.index - 1] as MoverParam).workersName} size={10}
+               onChange={event => setWorkedName(event.target.value)}
+        /><br/><br/>
         <select value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).secondaryFrom}
                 onChange={e => setSecondaryFrom(e.target.value)}
                 title="Самостоятельный узел берёт настройки из параметров ниже&#13;

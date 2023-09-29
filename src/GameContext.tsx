@@ -1,13 +1,29 @@
 import React, {PropsWithChildren, useContext, useState} from "react";
 import {GameResult, useGameResultContext} from "./GameResultContext";
+import {Buffer} from "buffer";
+import {gunzipSync, gzipSync} from 'fflate';
 
-const VALUES_SEPARATOR = ',';
-const PARAMS_SEPARATOR = ";";
+const decode = (str: string): string => Buffer.from(
+    gunzipSync(
+        Buffer.from(
+            str.replaceAll("-", "+")
+                .replaceAll("_", "/")
+                .replaceAll(".", "=")
+            , 'base64'
+        )
+    )
+).toString('utf8');
+
+const encode = (str: string): string =>
+    Buffer.from(gzipSync(Buffer.from(str)))
+        .toString('base64')
+        .replaceAll("+", "-")
+        .replaceAll("/", "_")
+        .replaceAll("=", ".");
 
 export abstract class PlaceParam {
-
     type: string;
-
+    name: string = ""
     errors: string[] = [];
 
     protected constructor(type: string) {
@@ -15,31 +31,17 @@ export abstract class PlaceParam {
         this.type = type;
     }
 
-    public static makeFromInitStr(initStr: string): PlaceParam | undefined {
-        const type = initStr.charAt(0).toUpperCase();
-        const iStr = initStr.slice(1);
+    abstract validate(): void;
 
-        switch (type) {
-            case BufferParam.LETTER:
-                return new BufferParam().setInitStr(iStr);
-            case ForkliftParam.LETTER:
-                return new ForkliftParam().setInitStr(iStr);
-            case ProcessorParam.LETTER:
-                return new ProcessorParam().setInitStr(iStr);
-            default:
-                return undefined;
-        }
-    }
-
-    public abstract toInitString(): string;
-
-    public abstract validate(): void;
-
-    public abstract clone(): PlaceParam;
+    abstract clone(): PlaceParam;
 
     equals(obj: PlaceParam) {
         return obj.type === this.type;
     }
+
+    abstract fillFromJson(value: any): PlaceParam;
+
+    abstract toJson(): any;
 }
 
 
@@ -54,25 +56,23 @@ export class BufferParam extends PlaceParam {
         super(BufferParam.LETTER);
     }
 
-    setInitStr(initStr: string): BufferParam {
+    fillFromJson(value: any): PlaceParam {
 
-        const pars = initStr.split(VALUES_SEPARATOR);
-
-        this.start = (pars.length > 0) ? parseInt(pars[0]) : 0;
-        this.limit = (pars.length > 1) ? parseInt(pars[1]) : 0;
-
-        if (this.start < 0) {
-            this.start = 0;
+        if (value.hasOwnProperty('s')) {
+            this.start = value.s;
         }
-        if (this.limit < 0) {
-            this.limit = 0;
+        if (value.hasOwnProperty('l')) {
+            this.limit = value.l;
+        }
+        if (value.hasOwnProperty('n')) {
+            this.name = value.n;
         }
 
         return this;
     }
 
-    toInitString(): string {
-        return BufferParam.LETTER + this.start + VALUES_SEPARATOR + this.limit;
+    toJson(): any {
+        return {'t': this.type, 's': this.start, 'l': this.limit, 'n': this.name};
     }
 
     validate() {
@@ -89,6 +89,7 @@ export class BufferParam extends PlaceParam {
         const res = new BufferParam();
         res.limit = this.limit;
         res.start = this.start;
+        res.name = this.name;
         return res;
     }
 
@@ -104,22 +105,13 @@ export class BufferParam extends PlaceParam {
     }
 }
 
-export abstract class SecondaryFromParam extends PlaceParam {
+export abstract class MoverParam extends PlaceParam {
 
     secondaryFrom: number = 0;
+    workersName: string = "";
 
     protected constructor(type: string) {
         super(type);
-    }
-
-    setSecondaryFrom(secondaryFrom: number) {
-        this.secondaryFrom = secondaryFrom;
-
-        if (this.secondaryFrom < 0) {
-            this.secondaryFrom = 0;
-        }
-
-        return this;
     }
 
     validate() {
@@ -134,13 +126,13 @@ export abstract class SecondaryFromParam extends PlaceParam {
             return false;
         }
 
-        const obj1 = obj as SecondaryFromParam;
+        const obj1 = obj as MoverParam;
 
         return obj1.secondaryFrom === this.secondaryFrom;
     }
 }
 
-export class ForkliftParam extends SecondaryFromParam {
+export class ForkliftParam extends MoverParam {
 
     public static readonly LETTER = "F";
 
@@ -152,33 +144,41 @@ export class ForkliftParam extends SecondaryFromParam {
         super(ForkliftParam.LETTER);
     }
 
-    setInitStr(initStr: string) {
-        const pars = initStr.split(VALUES_SEPARATOR);
+    fillFromJson(value: any): PlaceParam {
 
-        this.setSecondaryFrom((pars.length > 0) ? parseInt(pars[0]) : 0);
-
-        this.volume = (pars.length > 1) ? parseInt(pars[1]) : 6;
-        this.stepMod = (pars.length > 2) ? parseInt(pars[2]) : 1;
-        this.stepDiv = (pars.length > 3) ? parseInt(pars[3]) : 1;
-
-        if (this.volume < 1) {
-            this.volume = 1;
+        if (value.hasOwnProperty('s')) {
+            this.secondaryFrom = value.s;
         }
-        if (this.stepMod < 1) {
-            this.stepMod = 1;
+        if (value.hasOwnProperty('v')) {
+            this.volume = value.v;
         }
-        if (this.stepDiv < 1) {
-            this.stepDiv = 1;
+        if (value.hasOwnProperty('m')) {
+            this.stepMod = value.m;
         }
-        if (this.stepMod > this.stepDiv) {
-            this.stepMod = this.stepDiv;
+        if (value.hasOwnProperty('d')) {
+            this.stepDiv = value.d;
+        }
+        if (value.hasOwnProperty('n')) {
+            this.name = value.n;
+        }
+        if (value.hasOwnProperty('w')) {
+            this.workersName = value.w;
         }
 
         return this;
     }
 
-    toInitString(): string {
-        return ForkliftParam.LETTER + this.secondaryFrom + VALUES_SEPARATOR + this.volume + VALUES_SEPARATOR + this.stepMod + VALUES_SEPARATOR + this.stepDiv;
+    toJson(): any {
+
+        return {
+            't': this.type,
+            'v': this.volume,
+            'm': this.stepMod,
+            'd': this.stepDiv,
+            'n': this.name,
+            'w': this.workersName,
+            's': this.secondaryFrom
+        };
     }
 
     validate() {
@@ -200,6 +200,8 @@ export class ForkliftParam extends SecondaryFromParam {
     clone(): PlaceParam {
         const res = new ForkliftParam();
         res.secondaryFrom = this.secondaryFrom;
+        res.name = this.name;
+        res.workersName = this.workersName;
         res.volume = this.volume;
         res.stepDiv = this.stepDiv;
         res.stepMod = this.stepMod;
@@ -217,7 +219,7 @@ export class ForkliftParam extends SecondaryFromParam {
     }
 }
 
-export class ProcessorParam extends SecondaryFromParam {
+export class ProcessorParam extends MoverParam {
 
     public static readonly LETTER = "P";
 
@@ -229,28 +231,41 @@ export class ProcessorParam extends SecondaryFromParam {
         super(ProcessorParam.LETTER);
     }
 
-    setInitStr(initStr: string) {
-        const pars = initStr.split(VALUES_SEPARATOR);
+    fillFromJson(value: any): PlaceParam {
 
-        this.setSecondaryFrom((pars.length > 0) ? parseInt(pars[0]) : 0);
-
-        this.min = (pars.length > 1) ? parseInt(pars[1]) : 0;
-        this.max = (pars.length > 2) ? parseInt(pars[2]) : 0;
-        this.union = (pars.length > 3) ? (parseInt(pars[3]) > 0) : false;
-
-        if (this.min < 0) {
-            this.min = 0;
+        if (value.hasOwnProperty('s')) {
+            this.secondaryFrom = value.s;
         }
-        if (this.max < 1) {
-            this.max = 1;
+        if (value.hasOwnProperty('i')) {
+            this.min = value.i;
+        }
+        if (value.hasOwnProperty('a')) {
+            this.max = value.a;
+        }
+        if (value.hasOwnProperty('u')) {
+            this.union = value.u;
+        }
+        if (value.hasOwnProperty('n')) {
+            this.name = value.n;
+        }
+        if (value.hasOwnProperty('w')) {
+            this.workersName = value.w;
         }
 
         return this;
     }
 
-    toInitString(): string {
-        return ProcessorParam.LETTER + this.secondaryFrom + VALUES_SEPARATOR + this.min + VALUES_SEPARATOR + this.max
-            + VALUES_SEPARATOR + (this.union ? 1 : 0);
+    toJson(): any {
+
+        return {
+            't': this.type,
+            'i': this.min,
+            'a': this.max,
+            'u': this.union,
+            'n': this.name,
+            'w': this.workersName,
+            's': this.secondaryFrom
+        };
     }
 
     validate() {
@@ -269,6 +284,8 @@ export class ProcessorParam extends SecondaryFromParam {
     clone(): PlaceParam {
         const res = new ProcessorParam();
         res.secondaryFrom = this.secondaryFrom;
+        res.name = this.name;
+        res.workersName = this.workersName;
         res.min = this.min;
         res.max = this.max;
         res.union = this.union;
@@ -288,72 +305,69 @@ export class ProcessorParam extends SecondaryFromParam {
 
 
 export class InitParams {
-
     iterations: number = 200;
     expectedThroughput: number = 600;
     placeParams: PlaceParam[] = [];
+    warehouseName: string = "";
+    storeName: string = "";
 
-    setInitStr(initStr: string) {
+    static parse(initStr: string): InitParams {
 
-        let placeParams: PlaceParam[] = [];
+        try {
+            const jsonStr = decode(initStr);
 
-        let strs = initStr.split(PARAMS_SEPARATOR);
-        if (strs.length > 0) {
-
-            let number = parseInt(strs[0]);
-            if (!Number.isNaN(number)) {
-                this.iterations = number;
-                strs.shift();
+            const json = JSON.parse(jsonStr);
+            const res = new InitParams();
+            if (json.hasOwnProperty('i')) {
+                res.iterations = json.i;
             }
-            number = parseInt(strs[0]);
-            if (!Number.isNaN(number)) {
-                this.expectedThroughput = number;
-                strs.shift();
+            if (json.hasOwnProperty('t')) {
+                res.expectedThroughput = json.t;
+            }
+            if (json.hasOwnProperty('w')) {
+                res.warehouseName = json.w;
+            }
+            if (json.hasOwnProperty('s')) {
+                res.storeName = json.s;
             }
 
-            for (let strParam of strs) {
-                if (strParam !== undefined) {
-                    const param = PlaceParam.makeFromInitStr(strParam);
-                    if (param !== undefined) {
-                        placeParams.push(param);
+            if (json.hasOwnProperty('p')) {
+                const pars: any[] = json.p;
+
+                pars.forEach(value => {
+                    if (value.t === BufferParam.LETTER) {
+                        res.placeParams.push(new BufferParam().fillFromJson(value));
+                    } else if (value.t === ForkliftParam.LETTER) {
+                        res.placeParams.push(new ForkliftParam().fillFromJson(value));
+                    } else if (value.t === ProcessorParam.LETTER) {
+                        res.placeParams.push(new ProcessorParam().fillFromJson(value));
                     }
-                }
+                })
             }
+
+            res.validate()
+            return res;
+        } catch (err) {
+            console.log(err)
+            return new InitParams();
         }
-
-        placeParams.forEach((value, index) => {
-            if ((value.type === ForkliftParam.LETTER) || (value.type === ProcessorParam.LETTER)) {
-                const sfp = value as SecondaryFromParam;
-                const sec = sfp.secondaryFrom;
-                if ((sec > 0) && ((index === sec - 1) || (placeParams[sec - 1]?.type !== ProcessorParam.LETTER))) {
-                    sfp.secondaryFrom = 0;
-                }
-            }
-        });
-
-        placeParams.forEach((value, index) => {
-            if (value.type === ProcessorParam.LETTER) {
-                const sfp = value as SecondaryFromParam;
-                const sec = sfp.secondaryFrom;
-                if ((sec > 0) && ((placeParams[sec - 1] as ProcessorParam).secondaryFrom !== 0)) {
-                    sfp.secondaryFrom = 0;
-                }
-            }
-        });
-
-        this.placeParams = placeParams;
-
-        this.validate();
-
-        return this;
     }
 
     toInitString(): string {
-        let res = this.iterations.toString() + PARAMS_SEPARATOR + this.expectedThroughput.toString();
 
-        this.placeParams.forEach(value => res += PARAMS_SEPARATOR + value.toInitString());
+        const json: any = {
+            'i': this.iterations,
+            't': this.expectedThroughput,
+            'w': this.warehouseName,
+            's': this.storeName,
+            'p': []
+        };
 
-        return res;
+        this.placeParams.forEach(value => json.p.push(value.toJson()));
+
+        const jsonStr = JSON.stringify(json);
+
+        return encode(jsonStr);
     }
 
     validate(): void {
@@ -385,7 +399,7 @@ export class InitParams {
 
         let cycles = this.placeParams.map(value => {
             if ((value.type === ForkliftParam.LETTER) || (value.type === ProcessorParam.LETTER)) {
-                return (value as SecondaryFromParam).secondaryFrom;
+                return (value as MoverParam).secondaryFrom;
             } else {
                 return 0;
             }
@@ -419,6 +433,9 @@ export class InitParams {
         const res = new InitParams()
 
         res.iterations = this.iterations;
+        res.expectedThroughput = this.expectedThroughput;
+        res.warehouseName = this.warehouseName;
+        res.storeName = this.storeName;
         this.placeParams.forEach(value => res.placeParams.push(value.clone()));
 
         return res;
@@ -462,7 +479,7 @@ export const GameContextProvider = ({children}: PropsWithChildren<{}>) => {
 
     const {setGameResult} = useGameResultContext();
 
-    const defaultInitStr = "200;600;F3,6,1,1;B4,0;P0,1,6,0;B4,0;P0,1,6,0;B4,0;P0,1,6,0;B4,0;P0,1,6,0;B4,0;P0,1,6,0"
+    const defaultInitStr = ""
 
     const searchParams = new URLSearchParams(document.location.search);
 
@@ -473,7 +490,7 @@ export const GameContextProvider = ({children}: PropsWithChildren<{}>) => {
         initStr = defaultInitStr;
     }
 
-    const [initParams, setInitParamsNative] = useState<InitParams>(new InitParams().setInitStr(initStr));
+    const [initParams, setInitParamsNative] = useState<InitParams>(InitParams.parse(initStr));
 
     let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + initParams.toInitString();
     window.history.pushState({path: newUrl}, '', newUrl);

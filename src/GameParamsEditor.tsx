@@ -1,19 +1,14 @@
 import React, {FC} from "react";
-import {InitParams, useGameContext} from "./GameContext";
+import {useGameContext} from "./GameContext";
 import "./GameParamsEditor.css"
 import {Adder, StepEditor} from "./StepEditors";
-import {GameResult, SetGameResult, useGameResultContext} from "./GameResultContext";
 
-export type GameRunEvent = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult) => void;
+export type HideEditorCallback = () => void;
 
-export type GameParamsEditorParams = {
-    runGame: GameRunEvent;
-}
 
-export const GameParamsEditor: FC<GameParamsEditorParams> = (params: GameParamsEditorParams) => {
+export const GameParamsEditor: FC<{ hideEditor: HideEditorCallback }> = ({hideEditor}) => {
 
     const {initParams, setInitParams} = useGameContext();
-    const {gameResult, setGameResult} = useGameResultContext();
 
     function changeIterations(value: string) {
         let newInitParams = initParams.clone();
@@ -27,21 +22,43 @@ export const GameParamsEditor: FC<GameParamsEditorParams> = (params: GameParamsE
         setInitParams(newInitParams);
     }
 
+    function changeWarehouseName(value: string) {
+        let newInitParams = initParams.clone();
+        newInitParams.warehouseName = value;
+        setInitParams(newInitParams);
+    }
+
+    function changeStoreName(value: string) {
+        let newInitParams = initParams.clone();
+        newInitParams.storeName = value;
+        setInitParams(newInitParams);
+    }
+
     return <div className="GameParamsEditorInactiveEditor" key="GameParamsEditorInactiveEditor">
         <div><strong>Итераций</strong><br/>
             <input type="number" min={1} max={1000} value={initParams.iterations}
-                   onChange={event => changeIterations(event.target.value)}/><br/>
+                   onChange={event => changeIterations(event.target.value)}/><br/><br/>
             <button disabled={initParams.errors().length > 0} id="runGame" className="RunGameButton"
-                    onClick={event => params.runGame(initParams, gameResult, setGameResult)}
-            >Запуск
+                    onClick={event => hideEditor()}
+            >Закрыть редактор
             </button>
         </div>
-        <div className="GameParamsEditorBox"><strong>Склад</strong><br/>&#x221e;</div>
+        <div className="GameParamsEditorBox"><strong>Склад</strong><br/><br/>
+            Название:<br/>
+            <input type="text" value={initParams.warehouseName} size={10}
+                   onChange={event => changeWarehouseName(event.target.value)}
+            />
+            <br/><br/>&#x221e;
+        </div>
         {initParams.placeParams.map((value, index) => index + 1)
             .flatMap(value => [-value, value])
             .map(value => (<StepEditor index={value}/>))}
         <Adder index={initParams.placeParams.length + 1} key={"add-" + (initParams.placeParams.length + 1)}/>
-        <div className="GameParamsEditorBox"><strong>Выход</strong><br/>
+        <div className="GameParamsEditorBox"><strong>Выход</strong><br/><br/>
+            Название:<br/>
+            <input type="text" value={initParams.storeName} size={10}
+                   onChange={event => changeStoreName(event.target.value)}
+            /><br/><br/>
             Ожидание<br/><input type="number" min={1} max={10000} value={initParams.expectedThroughput}
                                 onChange={event => changeExpectedThroughput(event.target.value)}/><br/>
         </div>

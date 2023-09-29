@@ -11,8 +11,10 @@
     "@types/node": "^16.18.53",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
+    "buffer": "^6.0.3",
     "echarts": "^5.4.3",
     "echarts-for-react": "^3.0.2",
+    "fflate": "^0.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -48,9 +50,9 @@
     "@testdeck/mocha": "^0.3.3",
     "@types/chai": "^4.3.6",
     "chai": "^4.3.8",
+    "gh-pages": "^6.0.0",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
-    "ts-node": "^10.9.1",
-    "gh-pages": "^6.0.0"
+    "ts-node": "^10.9.1"
   }
 }
