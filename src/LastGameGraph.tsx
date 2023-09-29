@@ -149,10 +149,16 @@ export const LastGameGraph: FC = () => {
         let serBuffer: LineSeriesOption[] = [];
 
         for (let i = 0; i < buffers.length; i++) {
+
+            let name = initParams.placeParams[buffers[i] - 1].name;
+            if (name === "") {
+                name = "Буффер " + (buffers[i]);
+            }
+
             serBuffer.push({
                     xAxisIndex: 1,
                     yAxisIndex: 1,
-                    name: "Буффер " + (buffers[i]),
+                    name: name,
                     type: 'line',
                     stack: "buffers",
                     itemStyle: {
