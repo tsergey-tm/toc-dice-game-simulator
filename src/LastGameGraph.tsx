@@ -130,7 +130,7 @@ export const LastGameGraph: FC = () => {
                 for (let index = gameResult.rows.length - 1; index >= 0; index--) {
                     const value = gameResult.rows[index];
                     const iter = gameResult.rows.length - index - 1;
-                    buffersData[i].push([iter, value[i].count]);
+                    buffersData[i].push([iter, value[buffers[i]].count]);
                 }
             }
         } else {
