@@ -90,7 +90,7 @@ export const GameTable: FC = () => {
         {gameResult.rows.map(
             (value, index) =>
                 (<tr>
-                    <td>{gameResult.rows.length - index}</td>
+                    <td>{gameResult.rows.length - index - 1}</td>
                     {
                         value.map(
                             cell =>
