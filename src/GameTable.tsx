@@ -36,7 +36,7 @@ export const GameTable: FC = () => {
                     if (flParam.secondaryFrom > 0) {
                         const sec = initParams.placeParams[flParam.secondaryFrom - 1] as MoverParam;
                         text = (
-                            <span><br/><br/>сколько сделает<br/>{sec.name === "" ? ("Процессор " + flParam.secondaryFrom) : flParam.secondaryFrom}</span>);
+                            <span><br/><br/>сколько сделает<br/>{sec.name === "" ? ("Процессор " + flParam.secondaryFrom) : sec.name}</span>);
                     } else {
                         text = (<span>
                                 <br/><br/>переносит {flParam.volume} шт.<br/>в {flParam.stepMod} шаг<br/>каждые {flParam.stepDiv} шагов
@@ -78,7 +78,7 @@ export const GameTable: FC = () => {
                             <span><br/><br/>тут работают<br/>{workersName}</span>;
                     }
 
-                    const name = prParam.name === "" ? "Процессор " + (index + 1) : prParam.name;
+                    const name = prParam.name === "" ? ("Процессор " + (index + 1)) : prParam.name;
 
                     return <th><strong>{name}</strong>{secondaryText}{powerText}</th>;
                 }
