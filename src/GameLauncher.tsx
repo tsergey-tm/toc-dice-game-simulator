@@ -27,7 +27,7 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
     return <div className="GameLauncher">
         <button disabled={initParams.errors().length > 0} id="runGame" className="RunGameButton"
                 onClick={event => params.runGame(initParams, gameResult, setGameResult)}
-        >Запуск
+        >Запуск {initParams.iterations} итераций
         </button>
         &nbsp; &nbsp;Ожидание в колонке {initParams.storeName === "" ? "Выход" : initParams.storeName}:
         <input type="number" min={1} max={10000}
