@@ -1,0 +1,91 @@
+.ShowGameEditorButton {
+    -webkit-animation: ShowGameEditorButton_pulsing 10s infinite;
+    animation: ShowGameEditorButton_pulsing 10s infinite;
+    background: ButtonFace;
+}
+
+
+@-webkit-keyframes ShowGameEditorButton_pulsing {
+    0% {
+        background: ButtonFace;
+    }
+    91% {
+        background: ButtonFace;
+    }
+    94% {
+        background-color: rgb(255, 255, 64);
+    }
+    97% {
+        background-color: rgb(255, 64, 64);
+    }
+    100% {
+        background: ButtonFace;
+    }
+}
+
+@keyframes ShowGameEditorButton_pulsing {
+    0% {
+        background: ButtonFace;
+    }
+    91% {
+        background: ButtonFace;
+    }
+    94% {
+        background-color: rgb(255, 255, 64);
+    }
+    97% {
+        background-color: rgb(255, 64, 64);
+    }
+    100% {
+        background: ButtonFace;
+    }
+}
+
+.RunGameButton {
+    -webkit-animation: RunGameButton_pulsing 10s infinite;
+    animation: RunGameButton_pulsing 10s infinite;
+    background: ButtonFace;
+}
+
+
+@-webkit-keyframes RunGameButton_pulsing {
+    0% {
+        background: ButtonFace;
+    }
+    41% {
+        background: ButtonFace;
+    }
+    44% {
+        background-color: rgb(255, 255, 64);
+    }
+    47% {
+        background-color: rgb(255, 64, 64);
+    }
+    50% {
+        background: ButtonFace;
+    }
+    100% {
+        background: ButtonFace;
+    }
+}
+
+@keyframes RunGameButton_pulsing {
+    0% {
+        background: ButtonFace;
+    }
+    41% {
+        background: ButtonFace;
+    }
+    44% {
+        background-color: rgb(255, 255, 64);
+    }
+    47% {
+        background-color: rgb(255, 64, 64);
+    }
+    50% {
+        background: ButtonFace;
+    }
+    100% {
+        background: ButtonFace;
+    }
+}

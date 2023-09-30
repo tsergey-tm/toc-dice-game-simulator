@@ -1,6 +1,7 @@
 import React, {FC} from "react";
 import {InitParams, useGameContext} from "./GameContext";
 import {GameResult, SetGameResult, useGameResultContext} from "./GameResultContext";
+import "./GameLauncher.css"
 
 export type ShowEditorCallback = () => void;
 
@@ -34,6 +35,6 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
                value={initParams.expectedThroughput}
                onChange={event => changeExpectedThroughput(event.target.value)}/>
         &nbsp; &nbsp;
-        <button onClick={event => params.showEditor()}>Показать редактор</button>
+        <button onClick={event => params.showEditor()} className="ShowGameEditorButton">Показать редактор</button>
     </div>;
 }

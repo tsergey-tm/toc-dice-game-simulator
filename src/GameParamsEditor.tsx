@@ -34,7 +34,7 @@ export const GameParamsEditor: FC<{ hideEditor: HideEditorCallback }> = ({hideEd
         setInitParams(newInitParams);
     }
 
-    return <div className="GameParamsEditorInactiveEditor" key="GameParamsEditorInactiveEditor">
+    return <div className="GameParamsEditor" key="GameParamsEditor">
         <div><strong>Итераций</strong><br/>
             <input type="number" min={1} max={1000} value={initParams.iterations}
                    onChange={event => changeIterations(event.target.value)}/><br/><br/>

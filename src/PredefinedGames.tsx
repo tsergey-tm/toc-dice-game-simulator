@@ -5,7 +5,7 @@ export const PredefinedGames: FC = () => {
 
     const {setInitParams} = useGameContext();
 
-    return <div>Готовые рецепты:&nbsp; &nbsp;
+    return <div className="PredefinedGames">Готовые рецепты:&nbsp; &nbsp;
         <button
             onClick={event => setInitParams(InitParams.parse("H4sIAAaFFmUAA6tWylSyMjIw0FEqUbIyB9HlSlZKSjpKxRCqQMkquhokpxQA5AHVGuooJSpZmekolSpZpSXmFKfqKOUBZS8suLDhwqYLey92X9ipYAhUijDGoFYHYoIThG-io5QDFIXqm3Wx-WL7hV0XNgB1wRSSYJURWVYZkWOVMVlWGZNjlQlZVpmQY5UpWVaZkmOVGZpVsbUA_2_iLn4CAAA."))}>
             Сбалансированная система

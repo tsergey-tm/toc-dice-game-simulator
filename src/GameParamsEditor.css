@@ -6,7 +6,8 @@
     display: flex;
 }
 
-.GameParamsEditorInactiveEditor {
+.GameParamsEditor {
+    grid-area: c;
     border: 2px solid #ccc;
     border-radius: 3px;
     margin: 0.2em;
@@ -20,4 +21,54 @@
     border-radius: 3px;
     margin: 0.1em;
     padding: 0.1em;
+}
+
+
+.HideGameEditorButton {
+    -webkit-animation: HideGameEditorButton_pulsing 10s infinite;
+    animation: HideGameEditorButton_pulsing 10s infinite;
+    background: ButtonFace;
+}
+
+
+@-webkit-keyframes HideGameEditorButton_pulsing {
+    0% {
+        background: ButtonFace;
+    }
+    41% {
+        background: ButtonFace;
+    }
+    44% {
+        background-color: rgb(255, 255, 64);
+    }
+    47% {
+        background-color: rgb(255, 64, 64);
+    }
+    50% {
+        background: ButtonFace;
+    }
+    100% {
+        background: ButtonFace;
+    }
+}
+
+@keyframes HideGameEditorButton_pulsing {
+    0% {
+        background: ButtonFace;
+    }
+    41% {
+        background: ButtonFace;
+    }
+    44% {
+        background-color: rgb(255, 255, 64);
+    }
+    47% {
+        background-color: rgb(255, 64, 64);
+    }
+    50% {
+        background: ButtonFace;
+    }
+    100% {
+        background: ButtonFace;
+    }
 }
