@@ -11,10 +11,13 @@
 .GameParamsEditorAdder ul {
     display: none;
     position: absolute;
-    border: 1px solid #888;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--current-border);
     z-index: 1;
     list-style-type: none;
-    background-color: #cccccc;
+    background-color: var(--current-ltbackground);
+    color: var(--current-foreground);
     margin: 0.1em; /* Отступ слева в браузере IE и Opera */
     padding: 0.1em; /* Отступ слева в браузере Firefox, Safari, Chrome */
 }
@@ -28,13 +31,15 @@
 }
 
 .GameParamsEditorAdder li:hover {
-    background-color: #61dafb;
+    background-color: var(--current-background);
 }
 
 .GameParamsEditorBufferEditor,
 .GameParamsEditorProcessorEditor,
 .GameParamsEditorForkliftEditor {
-    border: 1px solid #888;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--current-border);
     border-radius: 3px;
     margin: 0.1em;
     padding: 0.1em;

@@ -267,7 +267,7 @@ export const LastGameGraph: FC = () => {
         },
         legend: {
             show: true,
-            top: 'bottom',
+            top: 'bottom'
         },
         grid: [
             {

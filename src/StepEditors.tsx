@@ -103,7 +103,7 @@ export const BufferEditor: FC<IndexParam> = (indexParam) => {
         <span className="Delete"
               onClick={() => delStep()}
               title="Удалить"
-        >&#x267B;</span>&#32;
+        >&#x267B;</span>&nbsp; &nbsp;
         <strong>Буфер&nbsp;{indexParam.index}</strong><br/><br/>
         Название:<br/>
         <input type="text"
@@ -173,7 +173,7 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
         <span className="Delete"
               onClick={() => delStep()}
               title="Удалить"
-        >&#x267B;</span>&#32;
+        >&#x267B;</span>&nbsp; &nbsp;
         <strong>Процессор&nbsp;{indexParam.index}</strong><br/><br/>
         Название:<br/>
         <input type="text"
@@ -283,7 +283,7 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
         <span className="Delete"
               onClick={() => delStep()}
               title="Удалить"
-        >&#x267B;</span>&#32;
+        >&#x267B;</span>&nbsp; &nbsp;
         <strong>Перекладчик&nbsp;{indexParam.index}</strong><br/><br/>
         Название:<br/>
         <input type="text"

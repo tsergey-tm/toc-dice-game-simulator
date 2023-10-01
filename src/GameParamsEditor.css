@@ -1,5 +1,7 @@
 .GameParamsEditorActiveEditor {
-    border: 2px solid #ccf;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--current-border);
     border-radius: 3px;
     margin: 0.2em;
     padding: 0.2em;
@@ -8,7 +10,9 @@
 
 .GameParamsEditor {
     grid-area: c;
-    border: 2px solid #ccc;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--current-border);
     border-radius: 3px;
     margin: 0.2em;
     padding: 0.2em;
@@ -17,7 +21,9 @@
 }
 
 .GameParamsEditorBox {
-    border: 1px solid #888;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--current-border);
     border-radius: 3px;
     margin: 0.1em;
     padding: 0.1em;
