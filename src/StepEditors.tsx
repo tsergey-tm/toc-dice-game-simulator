@@ -9,10 +9,12 @@ import {
     useGameContext
 } from "./GameContext";
 import "./StepEditor.css"
+import {useTranslation} from "react-i18next";
 
 export type IndexParam = {
     index: number;
 }
+
 
 function deleteParam(newInitParams: InitParams, index: number) {
 
@@ -34,6 +36,7 @@ function deleteParam(newInitParams: InitParams, index: number) {
 export const Adder: FC<IndexParam> = (indexParam) => {
 
     const {initParams, setInitParams} = useGameContext();
+    const {t} = useTranslation();
 
     function addStep(element: PlaceParam) {
 
@@ -66,15 +69,16 @@ export const Adder: FC<IndexParam> = (indexParam) => {
 
     return <div className="GameParamsEditorAdder"><span>+</span>
         <ul>
-            <li onClick={() => addBuffer()}>Добавить буффер</li>
-            <li onClick={() => addForklift()}>Добавить перекладчик</li>
-            <li onClick={() => addProcessor()}>Добавить процессор</li>
+            <li onClick={() => addBuffer()}>{t('StepEditor.add_buffer')}</li>
+            <li onClick={() => addForklift()}>{t('StepEditor.add_forklift')}</li>
+            <li onClick={() => addProcessor()}>{t('StepEditor.add_processor')}</li>
         </ul>
     </div>
 }
 export const BufferEditor: FC<IndexParam> = (indexParam) => {
 
     const {initParams, setInitParams} = useGameContext();
+    const {t} = useTranslation();
 
     function setStart(value: string) {
         let newInitParams = initParams.clone();
@@ -102,20 +106,23 @@ export const BufferEditor: FC<IndexParam> = (indexParam) => {
         className={"GameParamsEditorBufferEditor" + (initParams.placeParams[indexParam.index - 1].errors?.length ? " Error" : "")}>
         <span className="Delete"
               onClick={() => delStep()}
-              title="Удалить"
+              title={t('StepEditor.BufferEditor.delete')}
         >&#x267B;</span>&nbsp; &nbsp;
-        <strong>Буфер&nbsp;{indexParam.index}</strong><br/><br/>
-        Название:<br/>
+        <strong>{t('StepEditor.BufferEditor.buffer', {num: indexParam.index})}</strong><br/><br/>
+        {t('StepEditor.BufferEditor.name')}:<br/>
         <input type="text"
                value={initParams.placeParams[indexParam.index - 1].name} size={10}
                onChange={event => setName(event.target.value)}
         /><br/><br/>
-        Старт: <input type="number" value={(initParams.placeParams[indexParam.index - 1] as BufferParam).start}
-                      min={0} max={1000} title="Число элементов в начале"
-                      onChange={event => setStart(event.target.value)}/><br/>
-        Лимит: <input type="number" value={(initParams.placeParams[indexParam.index - 1] as BufferParam).limit}
-                      min={0} max={1000} title="Если больше 0, то максимальное число элементов в буфере"
-                      onChange={event => setLimit(event.target.value)}/><br/>
+        {t('StepEditor.BufferEditor.start')}: <input type="number"
+                                                     value={(initParams.placeParams[indexParam.index - 1] as BufferParam).start}
+                                                     min={0} max={1000} title={t('StepEditor.BufferEditor.start_hint')}
+                                                     onChange={event => setStart(event.target.value)}/><br/>
+        {t('StepEditor.BufferEditor.limit')}: <input type="number"
+                                                     value={(initParams.placeParams[indexParam.index - 1] as BufferParam).limit}
+                                                     min={0} max={1000}
+                                                     title={t('StepEditor.BufferEditor.limit_hint')}
+                                                     onChange={event => setLimit(event.target.value)}/><br/>
         {initParams.placeParams[indexParam.index - 1].errors?.length > 0 &&
             <span className="Error"
                   title={initParams.placeParams[indexParam.index - 1].errors.join('\n')}
@@ -127,6 +134,7 @@ export const BufferEditor: FC<IndexParam> = (indexParam) => {
 export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
 
     const {initParams, setInitParams} = useGameContext();
+    const {t} = useTranslation();
 
     function setUnion(value: boolean) {
         let newInitParams = initParams.clone();
@@ -172,17 +180,17 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
         className={"GameParamsEditorProcessorEditor" + (initParams.placeParams[indexParam.index - 1].errors?.length ? " Error" : "")}>
         <span className="Delete"
               onClick={() => delStep()}
-              title="Удалить"
+              title={t('StepEditor.ProcessorEditor.delete')}
         >&#x267B;</span>&nbsp; &nbsp;
-        <strong>Процессор&nbsp;{indexParam.index}</strong><br/><br/>
-        Название:<br/>
+        <strong>{t('StepEditor.ProcessorEditor.processor', {num: indexParam.index})}</strong><br/><br/>
+        {t('StepEditor.ProcessorEditor.name')}:<br/>
         <input type="text"
                value={initParams.placeParams[indexParam.index - 1].name} size={10}
                onChange={event => setName(event.target.value)}
         /><br/>
         {((initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom === 0 ||
                 !(initParams.placeParams[indexParam.index - 1] as ProcessorParam).union) &&
-            <span>Работают:<br/>
+            <span>{t('StepEditor.ProcessorEditor.workers')}:<br/>
         <input type="text"
                value={(initParams.placeParams[indexParam.index - 1] as MoverParam).workersName} size={10}
                onChange={event => setWorkedName(event.target.value)}
@@ -190,10 +198,11 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
         <br/>
         <select value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom}
                 onChange={e => setSecondaryFrom(e.target.value)}
-                title="Самостоятельный узел берёт настройки из параметров ниже&#13;
-                    Ведомый берёт число элементов для перемещения от ведущего, но не больше собственной случайной мощности"
+                title={t('StepEditor.ProcessorEditor.type.hint')}
         >
-            <option key={"prs-" + indexParam.index + "-val-0"} value={0}>Самостоятельный</option>
+            <option key={"prs-" + indexParam.index + "-val-0"}
+                    value={0}>{t('StepEditor.ProcessorEditor.type.primary')}
+            </option>
             {
                 initParams.placeParams
                     .map((value, index) => index + 1)
@@ -203,7 +212,7 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
                     .map(value =>
                         <option
                             key={"pro-" + indexParam.index + "-val-" + value}
-                            value={value}>{"Ведомый от " + value}</option>)
+                            value={value}>{t('StepEditor.ProcessorEditor.type.secondary', {name: value})}</option>)
             }
         </select><br/>
         {(initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom !== 0 &&
@@ -211,19 +220,21 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
                           checked={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).union}
                           id={"unioncb-" + indexParam.index} min={0} max={100}
                           onChange={event => setUnion(event.target.checked)}
-                          title="Разделяет ресурс на несколько колонок.&#13;Ведущий процессор работает и в этом шаге."
+                          title={t('StepEditor.ProcessorEditor.union.hint')}
             /><label htmlFor={"unioncb-" + indexParam.index}
-                     title="Разделяет ресурс на несколько колонок.&#13;Ведущий процессор работает и в этом шаге."
-            >Тот же</label><br/></span>)}
+                     title={t('StepEditor.ProcessorEditor.union.hint')}
+            >title={t('StepEditor.ProcessorEditor.union.text')}</label><br/></span>)}
         {((initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom === 0 ||
                 !(initParams.placeParams[indexParam.index - 1] as ProcessorParam).union) &&
-            <span>Мин: <input type="number"
-                              value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).min}
-                              min={0} max={100} onChange={event => setMin(event.target.value)}
+            <span>{t('StepEditor.ProcessorEditor.min')}: <input type="number"
+                                                                value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).min}
+                                                                min={0} max={100}
+                                                                onChange={event => setMin(event.target.value)}
             /><br/>
-            Макс: <input type="number"
-                         value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).max}
-                         min={0} max={100} onChange={event => setMax(event.target.value)}
+                {t('StepEditor.ProcessorEditor.max')}: <input type="number"
+                                                              value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).max}
+                                                              min={0} max={100}
+                                                              onChange={event => setMax(event.target.value)}
                 /><br/></span>}
         {initParams.placeParams[indexParam.index - 1].errors?.length > 0 &&
             <span className="Error"
@@ -236,6 +247,7 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
 export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
 
     const {initParams, setInitParams} = useGameContext();
+    const {t} = useTranslation();
 
     function setVolume(value: string) {
         let newInitParams = initParams.clone();
@@ -282,25 +294,25 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
         className={"GameParamsEditorForkliftEditor" + (initParams.placeParams[indexParam.index - 1].errors?.length ? " Error" : "")}>
         <span className="Delete"
               onClick={() => delStep()}
-              title="Удалить"
+              title={t('StepEditor.ForkliftEditor.delete')}
         >&#x267B;</span>&nbsp; &nbsp;
-        <strong>Перекладчик&nbsp;{indexParam.index}</strong><br/><br/>
-        Название:<br/>
+        <strong>{t('StepEditor.ForkliftEditor.forklift', {num: indexParam.index})}</strong><br/><br/>
+        {t('StepEditor.ForkliftEditor.name')}:<br/>
         <input type="text"
                value={initParams.placeParams[indexParam.index - 1].name} size={10}
                onChange={event => setName(event.target.value)}
         /><br/>
-        Работают:<br/>
+        {t('StepEditor.ForkliftEditor.workers')}:<br/>
         <input type="text"
                value={(initParams.placeParams[indexParam.index - 1] as MoverParam).workersName} size={10}
                onChange={event => setWorkedName(event.target.value)}
         /><br/><br/>
         <select value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).secondaryFrom}
                 onChange={e => setSecondaryFrom(e.target.value)}
-                title="Самостоятельный узел берёт настройки из параметров ниже&#13;
-                    Ведомый берёт число элементов для перемещения от ведущего"
+                title={t('StepEditor.ForkliftEditor.type.hint')}
         >
-            <option key={"fls-" + indexParam.index + "-val-0"} value={0}>Самостоятельный</option>
+            <option key={"fls-" + indexParam.index + "-val-0"}
+                    value={0}>{t('StepEditor.ForkliftEditor.type.primary')}</option>
             {
                 initParams.placeParams
                     .map((value, index) => index + 1)
@@ -308,19 +320,20 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
                     .map(value =>
                         <option
                             key={"pro-" + indexParam.index + "-val-" + value}
-                            value={value}>{"Ведомый от " + value}</option>)
+                            value={value}>{t('StepEditor.ForkliftEditor.type.secondary', {name: value})}</option>)
             }
         </select><br/>
         {(initParams.placeParams[indexParam.index - 1] as ForkliftParam).secondaryFrom === 0 &&
-            <span>Объём: <input type="number"
-                                value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).volume}
-                                min={0} max={100} onChange={event => setVolume(event.target.value)}/><br/>
-        Работает:<br/>
+            <span>{t('StepEditor.ForkliftEditor.volume')}: <input type="number"
+                                                                  value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).volume}
+                                                                  min={1} max={100}
+                                                                  onChange={event => setVolume(event.target.value)}/><br/>
+                {t('StepEditor.ForkliftEditor.worked')}:<br/>
         <input type="number" value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).stepMod}
-               min={0} max={100} onChange={event => setStepMod(event.target.value)}/>
+               min={1} max={100} onChange={event => setStepMod(event.target.value)}/>
         /
         <input type="number" value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).stepDiv}
-               min={0} max={100} onChange={event => setStepDiv(event.target.value)}/><br/></span>
+               min={1} max={100} onChange={event => setStepDiv(event.target.value)}/><br/></span>
         }
         {initParams.placeParams[indexParam.index - 1].errors?.length > 0 &&
             <span className="Error"

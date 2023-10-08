@@ -26,15 +26,15 @@ class StatData {
     static readonly TYPE_FORKLIFT = 'F';
     static readonly TYPE_PROCESSOR = 'P';
     static readonly TYPE_STORE = 'S';
-    // Тип шага
+    // Stage type
     type: string;
-    // Для буфера - число элементов, для этапа - число реально перемещённых элементов на этом этапе
+    // For a buffer - the number of elements, for a stage - the number of actually moved elements at this stage
     count: number = 0;
-    // Для процессора число элементов, которые он может перенести на этом шаге
+    // For a processor, the number of elements it can transfer in this step
     mayCount: number = 0;
-    // Для процессора число элементов, которые он может перенести на этом шаге, после действий на других этапах
+    // For a processor, the number of elements it can transfer in this step after actions in other steps
     mayCountAlowed: number = 0;
-    // Для буфера - лимит буфера. Если равно 0, то лимита нет
+    // For a buffer - buffer limit. If equal to 0, then there is no limit
     limit: number = 0;
 
     constructor(type: string) {

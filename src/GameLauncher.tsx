@@ -2,6 +2,7 @@ import React, {FC} from "react";
 import {InitParams, useGameContext} from "./GameContext";
 import {GameResult, SetGameResult, useGameResultContext} from "./GameResultContext";
 import "./GameLauncher.css"
+import {useTranslation} from "react-i18next";
 
 export type ShowEditorCallback = () => void;
 
@@ -17,6 +18,7 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
 
     const {initParams, setInitParams} = useGameContext();
     const {gameResult, setGameResult} = useGameResultContext();
+    const {t} = useTranslation();
 
 
     function changeExpectedThroughput(value: string) {
@@ -27,14 +29,14 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
 
     return <div className="GameLauncher">
         <button disabled={initParams.errors().length > 0} id="runGame" className="RunGameButton"
-                onClick={event => params.runGame(initParams, gameResult, setGameResult)}
-        >Запуск {initParams.iterations} итераций
-        </button>
-        &nbsp; &nbsp;Ожидание в колонке {initParams.storeName === "" ? "Выход" : initParams.storeName}:
+                onClick={() => params.runGame(initParams, gameResult, setGameResult)}
+        >{t('launcher.run', {iterations: initParams.iterations})}</button>
+        &nbsp; &nbsp;{t('GameLauncher.expected_throughput')}:
         <input type="number" min={1} max={10000}
                value={initParams.expectedThroughput}
                onChange={event => changeExpectedThroughput(event.target.value)}/>
         &nbsp; &nbsp;
-        <button onClick={event => params.showEditor()} className="ShowGameEditorButton">Показать редактор</button>
+        <button onClick={() => params.showEditor()}
+                className="ShowGameEditorButton">{t('GameLauncher.show_editor')}</button>
     </div>;
 }

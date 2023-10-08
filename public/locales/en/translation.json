@@ -1,0 +1,141 @@
+{
+  "help": {
+    "text": "<p>Three types of block. Each block can be given a name that will be displayed in the results. For active blocks, you can specify the type of worker, for example, developers, testers, etc.</p><p>Buffer: passive block, stores elements, adjustable value at the start and a limit that does not exceed active blocks.</p><p>Move: active block, moves elements.<br/>Two operating modes:<ul><li>Independent: shifts the specified amount of elements every N step out of M steps. For example, if N = 2 and M = 5, then in the second step out of every five </li><li>Slave: shifts the volume of elements that the master block shifted</li></ul></p><p>Processor: active block, moves elements.<br/>Two operating modes:<ul><li>Primary: shifts the volume of elements that turns out to be a random distribution between the minimum and maximum power.For example, for a regular dice the power values are 1-6</li><li>Secondary:<ul><li>Not selected \"Same\": shifts the amount of elements that fell from the leading block, but no more than the distribution of its own power.</li><li>Same is selected: the leading block also works in this column. Priority is given to the oldest elements. If the leader has specified the type of employee, then the results will show them in this column</li></ul></li></ul></p>",
+    "close": "Close"
+  },
+  "launcher": {
+    "run": "Run {{iterations}} iterations"
+  },
+  "PredefinedGames": {
+    "predefined_games": "Predefined games",
+    "balanced": "Balanced line",
+    "unbalanced": "Unbalanced line",
+    "drum_buffer_rope": "Drum-Buffer-Rope (DBR)",
+    "drum_buffer_rope_improvement_in_surplus_resource": "DBR with improvement in surplus resource",
+    "drum_buffer_rope_improvement_in_constraint": "DBR with improvement in constraint",
+    "drum_buffer_rope_big_buffers": "DBR with big buffers",
+    "kanban": "Kanban"
+  },
+  "GameLauncher": {
+    "expected_throughput": "Expected throughput",
+    "show_editor": "Show editor"
+  },
+  "GameParamsEditor": {
+    "iterations": "Iterations",
+    "close_editor": "Close editor",
+    "warehouse": "Warehouse",
+    "name": "Name",
+    "output": "Output",
+    "expected_throughput": "Expected throughput"
+  },
+  "GameTable": {
+    "with_limit": "with limit",
+    "who_work_here": "{{workersName}} work here",
+    "as_much_as_does": "as much as does",
+    "processor": "Processor\u00A0{{num}}",
+    "forklift": "Forklift\u00A0{{num}}",
+    "forklift_moves": "moves {{volume}}\u00A0items at\u00A0the\u00A0{{mod}}\u00A0step every\u00A0{{div}}\u00A0steps",
+    "here_work_from": "from {{secName}} work here",
+    "work_as_min_max": "how much {{secName}} rolled, but not more than {{min}}-{{max}}",
+    "ability": "ability {{min}}-{{max}}",
+    "output": "Output",
+    "warehouse": "Warehouse"
+  },
+  "StepEditor": {
+    "add_buffer": "Add buffer",
+    "add_forklift": "Add forklift",
+    "add_processor": "Add processor",
+    "BufferEditor": {
+      "buffer": "Buffer\u00A0{{num}}",
+      "name": "Name",
+      "start": "Start",
+      "start_hint": "Number of elements at the beginning",
+      "limit": "Limit",
+      "limit_hint": "If greater than 0, then the maximum number of elements in the buffer",
+      "delete": "Delete"
+    },
+    "ProcessorEditor": {
+      "processor": "Processor\u00A0{{num}}",
+      "name": "Name",
+      "workers": "Workers",
+      "type": {
+        "hint": "The primary node takes settings from the parameters below.&#13;The secondary takes the number of elements to move from the master, but not more than its own random power",
+        "primary": "Primary",
+        "secondary": "Secondary from {{name}}"
+      },
+      "delete": "Delete",
+      "union": {
+        "hint": "Divides the resource into several columns.&#13;The primary processor also works at this stage.",
+        "text": "Same"
+      },
+      "min": "Min",
+      "max": "Max"
+    },
+    "ForkliftEditor": {
+      "delete": "Delete",
+      "forklift": "Forklift\u00A0{{num}}",
+      "name": "Name",
+      "workers": "Workers",
+      "type": {
+        "hint": "The primary node takes the settings from the parameters below&#13;The secondary takes the number of elements to move from the master",
+        "primary": "Primary",
+        "secondary": "Secondary from {{name}}"
+      },
+      "volume": "Volume",
+      "worked": "Worked"
+    }
+  },
+  "EditorHelp": {
+    "hint": "Click for help"
+  },
+  "GameContext": {
+    "BufferParam": {
+      "start_below_zero": "Start value below zero",
+      "limit_below_zero": "Limit value below zero"
+    },
+    "MoverParam": {
+      "secondary_below_zero": "Invalid reference value to primary"
+    },
+    "ForkliftParam": {
+      "volume_below_one": "Volume value is less than one",
+      "step_mod_below_one": "The value of each Nth step is less than one",
+      "step_div_below_one": "The value from the number of steps is less than one",
+      "step_div_below_step_mod": "The value of each Nth step is greater than the number of steps"
+    },
+    "ProcessorParam": {
+      "min_below_zero": "Minimum ability value is less than zero",
+      "max_below_one": "The maximum ability value is less than one",
+      "max_below_min": "The minimum ability value is greater than the maximum"
+    },
+    "InitParams": {
+      "first_buffer": "The first element cannot be a buffer",
+      "two_same_types": "You cannot place two objects of the same type next to each other",
+      "buffer_processor": "There must be a buffer in front of the processor",
+      "buffer_forklift": "There must be a buffer in front of the forklift",
+      "buffer_store": "You can't put a buffer in front of the store"
+    }
+  },
+  "LastGameGraph": {
+    "throughput": "Throughput",
+    "expected_throughput": "Expected throughput",
+    "expected_throughput_diff": "Difference between expected throughput and actual throughput",
+    "buffer": "Buffer\u00A0{{num}}",
+    "lead_time": "Lead time",
+    "lead_time_perc": "Lead time percentile",
+    "last_run_stat": "Last run statistics",
+    "last_run_stat_example": "Last run statistics example",
+    "throughput_per_iteration": "Throughput per iteration",
+    "wip_per_iteration": "WIP per iteration",
+    "lead_time_distribution": "Lead time distribution"
+  },
+  "TotalGameGraph": {
+    "throughput_distribution": "Throughput distribution",
+    "throughput_perc": "Throughput percentile",
+    "wip_distribution": "WIP distribution",
+    "wip_perc": "WIP percentile",
+    "lead_time_distribution": "Lead time distribution",
+    "lead_time_perc": "Lead time percentile",
+    "run_stat": "Aggregate statistics",
+    "run_stat_example": "Aggregate statistics example"
+  }
+}

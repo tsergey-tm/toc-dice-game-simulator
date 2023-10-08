@@ -2,6 +2,7 @@ import React, {PropsWithChildren, useContext, useState} from "react";
 import {GameResult, useGameResultContext} from "./GameResultContext";
 import {Buffer} from "buffer";
 import {gunzipSync, gzipSync} from 'fflate';
+import i18n from "./i18n";
 
 const decode = (str: string): string => Buffer.from(
     gunzipSync(
@@ -78,10 +79,10 @@ export class BufferParam extends PlaceParam {
     validate() {
         this.errors = [];
         if (this.start < 0) {
-            this.errors.push("Стартовое значение меньше ноля");
+            this.errors.push(i18n.t('GameContext.BufferParam.start_below_zero'));
         }
         if (this.limit < 0) {
-            this.errors.push("Значение лимита меньше ноля");
+            this.errors.push(i18n.t('GameContext.BufferParam.limit_below_zero'));
         }
     }
 
@@ -117,7 +118,7 @@ export abstract class MoverParam extends PlaceParam {
     validate() {
         this.errors = [];
         if (this.secondaryFrom < 0) {
-            this.errors.push("Неправильное значение ссылки на ведущего");
+            this.errors.push(i18n.t('GameContext.MoverParam.secondary_below_zero'));
         }
     }
 
@@ -183,17 +184,17 @@ export class ForkliftParam extends MoverParam {
 
     validate() {
         super.validate();
-        if (this.volume < 0) {
-            this.errors.push("Значение объёма меньше одного");
+        if (this.volume < 1) {
+            this.errors.push(i18n.t('GameContext.ForkliftParam.volume_below_one'));
         }
-        if (this.stepMod < 0) {
-            this.errors.push("Значение каждого N-ого шага меньше единицы");
+        if (this.stepMod < 1) {
+            this.errors.push(i18n.t('GameContext.ForkliftParam.step_mod_below_one'));
         }
-        if (this.stepDiv < 0) {
-            this.errors.push("Значение из числа шагов меньше единицы");
+        if (this.stepDiv < 1) {
+            this.errors.push(i18n.t('GameContext.ForkliftParam.step_div_below_one'));
         }
         if (this.stepMod > this.stepDiv) {
-            this.errors.push("Значение каждого N-ого шага больше числа шагов");
+            this.errors.push(i18n.t('GameContext.ForkliftParam.step_div_below_step_mod'));
         }
     }
 
@@ -271,13 +272,13 @@ export class ProcessorParam extends MoverParam {
     validate() {
         super.validate();
         if (this.min < 0) {
-            this.errors.push("Значение минимальной производительности меньше ноля");
+            this.errors.push(i18n.t('GameContext.ProcessorParam.min_below_zero'));
         }
         if (this.max < 1) {
-            this.errors.push("Значение максимальной производительности меньше одного");
+            this.errors.push(i18n.t('GameContext.ProcessorParam.max_below_one'));
         }
         if (this.min > this.max) {
-            this.errors.push("Значение минимальной производительности больше максимальной");
+            this.errors.push(i18n.t('GameContext.ProcessorParam.max_below_min'));
         }
     }
 
@@ -375,57 +376,27 @@ export class InitParams {
 
         if (this.placeParams.length > 0) {
             if (this.placeParams[0].type === BufferParam.LETTER) {
-                this.placeParams[0].errors.push("Первым элементом не может быть буфер")
+                this.placeParams[0].errors.push(i18n.t('GameContext.InitParams.first_buffer'));
             }
 
             let prevType = this.placeParams[0].type;
 
             for (let i = 1; i < this.placeParams.length; i++) {
                 if (prevType === this.placeParams[i].type) {
-                    this.placeParams[i].errors.push("Нельзя ставить два одинаковых типа объектов рядом");
+                    this.placeParams[i].errors.push(i18n.t('GameContext.InitParams.two_same_types'));
                 } else if (prevType === ForkliftParam.LETTER && this.placeParams[i].type === ProcessorParam.LETTER) {
-                    this.placeParams[i].errors.push("Перед процессором должен быть буфер");
+                    this.placeParams[i].errors.push(i18n.t('GameContext.InitParams.buffer_processor'));
                 } else if (prevType === ProcessorParam.LETTER && this.placeParams[i].type === ForkliftParam.LETTER) {
-                    this.placeParams[i].errors.push("Перед перекладчиком должен быть буфер");
+                    this.placeParams[i].errors.push(i18n.t('GameContext.InitParams.buffer_forklift'));
                 }
                 prevType = this.placeParams[i].type;
             }
 
             const lastIndex = this.placeParams.length - 1;
             if (this.placeParams[lastIndex].type === BufferParam.LETTER) {
-                this.placeParams[lastIndex].errors.push("Перед выходом нельзя ставить буфер")
+                this.placeParams[lastIndex].errors.push(i18n.t('GameContext.InitParams.buffer_store'));
             }
         }
-
-        let cycles = this.placeParams.map(value => {
-            if ((value.type === ForkliftParam.LETTER) || (value.type === ProcessorParam.LETTER)) {
-                return (value as MoverParam).secondaryFrom;
-            } else {
-                return 0;
-            }
-        });
-
-        let removed: number[] = [];
-        do {
-            let cycles1 = new Array<number>(cycles.length).fill(0);
-
-            cycles.forEach((value, index) => {
-                if (value > 0) {
-                    cycles1[value - 1] = cycles[value - 1];
-                }
-            })
-
-            removed = cycles1.map((value, index) => cycles[index] - value).filter(value => value !== 0);
-
-            cycles = cycles1;
-        } while (removed.length);
-
-        cycles.forEach((value, index) => {
-            if (value > 0) {
-                this.placeParams[index].errors.push("Участвует в циклической зависимости, надо её разорвать");
-            }
-        });
-
     }
 
     clone(): InitParams {

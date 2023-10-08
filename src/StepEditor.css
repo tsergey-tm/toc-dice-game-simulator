@@ -18,8 +18,8 @@
     list-style-type: none;
     background-color: var(--current-ltbackground);
     color: var(--current-foreground);
-    margin: 0.1em; /* Отступ слева в браузере IE и Opera */
-    padding: 0.1em; /* Отступ слева в браузере Firefox, Safari, Chrome */
+    margin: 0.1em;
+    padding: 0.1em;
 }
 
 .GameParamsEditorAdder:hover ul {

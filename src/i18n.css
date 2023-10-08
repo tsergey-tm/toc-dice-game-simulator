@@ -1,0 +1,30 @@
+.LanguageSwitcher {
+    background-color: var(--current-ltbackground);
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.1em;
+    padding: 0.2em;
+}
+
+.LanguageSwitcher .LanguageSwitcher_lng {
+    display: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--current-border);
+    z-index: 1;
+    background-color: var(--current-ltbackground);
+    color: var(--current-foreground);
+    cursor: pointer;
+    margin: 0.1em;
+    padding: 0.2em;
+}
+
+
+.LanguageSwitcher:hover .LanguageSwitcher_lng {
+    display: block;
+}
+
+.LanguageSwitcher:hover .LanguageSwitcher_lng:hover {
+    background-color: var(--current-background);
+}

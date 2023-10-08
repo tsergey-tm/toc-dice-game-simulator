@@ -12,6 +12,7 @@ import {GridComponent, LegendComponent, TitleComponent, ToolboxComponent, Toolti
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {CanvasRenderer,} from 'echarts/renderers';
 import {EChartsOption, LineSeriesOption, SeriesOption} from "echarts";
+import {useTranslation} from "react-i18next";
 
 // Register the required components
 echarts.use(
@@ -24,6 +25,7 @@ export const LastGameGraph: FC = () => {
 
     const {initParams} = useGameContext();
     const {gameResult} = useGameResultContext();
+    const {t} = useTranslation();
 
 
     function makeFlowSeries() {
@@ -54,7 +56,7 @@ export const LastGameGraph: FC = () => {
         let serFlow: LineSeriesOption = {
             xAxisIndex: 0,
             yAxisIndex: 0,
-            name: "Поток",
+            name: t('LastGameGraph.throughput'),
             type: 'line',
             smooth: true,
             smoothMonotone: 'x',
@@ -74,7 +76,7 @@ export const LastGameGraph: FC = () => {
         let serFlowMean: LineSeriesOption = {
             xAxisIndex: 0,
             yAxisIndex: 0,
-            name: "Ожидание",
+            name: t('LastGameGraph.expected_throughput'),
             type: 'line',
             smooth: true,
             smoothMonotone: 'x',
@@ -93,7 +95,7 @@ export const LastGameGraph: FC = () => {
         let serFlowMeanDelta: LineSeriesOption = {
             xAxisIndex: 0,
             yAxisIndex: 0,
-            name: "Разница между потоком и ожиданием",
+            name: t('LastGameGraph.expected_throughput_diff'),
             type: 'line',
             smooth: true,
             smoothMonotone: 'x',
@@ -115,8 +117,8 @@ export const LastGameGraph: FC = () => {
 
     function makeBufferSeries() {
 
-        let buffers: number[] = [];
-        let buffersData: number[][][] = [];
+        let buffers: number[];
+        let buffersData: number[][][];
         if (gameResult.rows.length > 0) {
 
             buffers = gameResult.rows[0]
@@ -150,9 +152,9 @@ export const LastGameGraph: FC = () => {
 
         for (let i = 0; i < buffers.length; i++) {
 
-            let name = initParams.placeParams[buffers[i] - 1].name;
+            let name = initParams.placeParams[buffers[i] - 1]?.name;
             if (name === "") {
-                name = "Буффер " + (buffers[i]);
+                name = t('LastGameGraph.buffer', {num: buffers[i]});
             }
 
             serBuffer.push({
@@ -209,7 +211,7 @@ export const LastGameGraph: FC = () => {
             {
                 xAxisIndex: 2,
                 yAxisIndex: 2,
-                name: "Время производства",
+                name: t('LastGameGraph.lead_time'),
                 type: 'bar',
                 itemStyle: {
                     borderColor: "rgb(102,140,255)",
@@ -220,7 +222,7 @@ export const LastGameGraph: FC = () => {
             {
                 xAxisIndex: 2,
                 yAxisIndex: 3,
-                name: "Процентиль времени производства",
+                name: t('LastGameGraph.lead_time_perc'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgba(191,128,255)",
@@ -249,7 +251,7 @@ export const LastGameGraph: FC = () => {
 
         animation: true,
         title: {
-            text: (gameResult.rows.length > 0) ? "Статистика последнего запуска" : "Пример статистики последнего запуска",
+            text: (gameResult.rows.length > 0) ? t('LastGameGraph.last_run_stat') : t('LastGameGraph.last_run_stat_example'),
             left: 'center'
         },
         toolbox: {
@@ -286,7 +288,7 @@ export const LastGameGraph: FC = () => {
         xAxis: [
             {
                 gridIndex: 0,
-                name: "Проход на итерацию",
+                name: t('LastGameGraph.throughput_per_iteration'),
                 nameLocation: "middle",
                 nameGap: 30,
                 axisPointer: {
@@ -303,7 +305,7 @@ export const LastGameGraph: FC = () => {
             },
             {
                 gridIndex: 1,
-                name: "Незавершенка на итерацию",
+                name: t('LastGameGraph.wip_per_iteration'),
                 nameLocation: "middle",
                 nameGap: 30,
                 axisPointer: {
@@ -320,7 +322,7 @@ export const LastGameGraph: FC = () => {
             },
             {
                 gridIndex: 2,
-                name: "Распределение времени производства",
+                name: t('LastGameGraph.lead_time_distribution'),
                 nameLocation: "middle",
                 nameGap: 30,
                 axisPointer: {

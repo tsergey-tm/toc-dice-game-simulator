@@ -19,6 +19,7 @@ import {
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {CanvasRenderer,} from 'echarts/renderers';
 import {EChartsOption, SeriesOption} from "echarts";
+import {useTranslation} from "react-i18next";
 
 // Register the required components
 echarts.use(
@@ -31,11 +32,11 @@ export const TotalGameGraph: FC = () => {
 
     const {initParams} = useGameContext();
     const {gameResult} = useGameResultContext();
-
+    const {t} = useTranslation();
 
     function makeFlowSeries(): SeriesOption[] {
 
-        let control: number[] = [];
+        let control: number[];
         if (gameResult.throughputs.length > 0) {
             control = gameResult.throughputs;
         } else {
@@ -63,7 +64,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 0,
                 yAxisIndex: 0,
-                name: "Распределение протока",
+                name: t('TotalGameGraph.throughput_distribution'),
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
@@ -89,7 +90,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 0,
                 yAxisIndex: 1,
-                name: "Процентиль протока",
+                name: t('TotalGameGraph.throughput_perc'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgba(191,128,255)",
@@ -111,7 +112,7 @@ export const TotalGameGraph: FC = () => {
     function makeBufferSeries(): SeriesOption[] {
 
 
-        let control: number[] = [];
+        let control: number[];
         if (gameResult.wips.length > 0) {
             control = gameResult.wips;
         } else {
@@ -140,7 +141,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 1,
                 yAxisIndex: 2,
-                name: "Распределение незавершенки",
+                name: t('TotalGameGraph.wip_distribution'),
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
@@ -152,7 +153,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 1,
                 yAxisIndex: 3,
-                name: "Процентиль незавершенки",
+                name: t('TotalGameGraph.wip_perc'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgba(191,128,255)",
@@ -173,7 +174,7 @@ export const TotalGameGraph: FC = () => {
 
     function makeControlSeries(): SeriesOption[] {
 
-        let control: number[] = [];
+        let control: number[];
         if (gameResult.controls.length > 0) {
             control = gameResult.controls;
         } else {
@@ -200,7 +201,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 2,
                 yAxisIndex: 4,
-                name: "Время производства",
+                name: t('TotalGameGraph.lead_time_distribution'),
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
@@ -212,7 +213,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 2,
                 yAxisIndex: 5,
-                name: "Процентиль времени производства",
+                name: t('TotalGameGraph.lead_time_perc'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgba(191,128,255)",
@@ -241,7 +242,7 @@ export const TotalGameGraph: FC = () => {
 
         animation: true,
         title: {
-            text: (gameResult.throughputs.length > 0) ? "Статистика запусков" : "Пример статистики запусков",
+            text: (gameResult.throughputs.length > 0) ? t('TotalGameGraph.run_stat') : t('TotalGameGraph.run_stat_example'),
             left: 'center'
         },
         toolbox: {
@@ -278,7 +279,7 @@ export const TotalGameGraph: FC = () => {
         xAxis: [
             {
                 gridIndex: 0,
-                name: "Распределение прохода",
+                name: t('TotalGameGraph.throughput_distribution'),
                 nameLocation: "middle",
                 nameGap: 30,
                 axisPointer: {
@@ -295,7 +296,7 @@ export const TotalGameGraph: FC = () => {
             },
             {
                 gridIndex: 1,
-                name: "Распределение незавершенки",
+                name: t('TotalGameGraph.wip_distribution'),
                 nameLocation: "middle",
                 nameGap: 30,
                 axisPointer: {
@@ -312,7 +313,7 @@ export const TotalGameGraph: FC = () => {
             },
             {
                 gridIndex: 2,
-                name: "Распределение времени производства",
+                name: t('TotalGameGraph.lead_time_distribution'),
                 nameLocation: "middle",
                 nameGap: 30,
                 axisPointer: {
