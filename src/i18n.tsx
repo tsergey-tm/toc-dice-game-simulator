@@ -30,6 +30,9 @@ i18n
             order: ['localStorage', 'sessionStorage', 'navigator'],
             cache: ['localStorage']
         },
+        backend: {
+            loadPath: `${process.env.PUBLIC_URL}/locales/{{lng}}/{{ns}}.json`,
+        },
         interpolation: {
             escapeValue: false
         }
