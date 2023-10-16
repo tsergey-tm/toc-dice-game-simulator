@@ -69,7 +69,9 @@
         "text": "Same"
       },
       "min": "Min",
-      "max": "Max"
+      "max": "Max",
+      "min_title": "Minimal power",
+      "max_title": "Maximal power"
     },
     "ForkliftEditor": {
       "delete": "Delete",

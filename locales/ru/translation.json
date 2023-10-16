@@ -69,8 +69,10 @@
         "hint": "Разделяет ресурс на несколько колонок.&#13;Ведущий процессор работает и в этом шаге.",
         "text": "Тот же"
       },
-      "min": "StepEditor.ProcessorEditor.min",
-      "max": "StepEditor.ProcessorEditor.max"
+      "min": "Мин",
+      "max": "Макс",
+      "min_title": "Минимальная мощность",
+      "max_title": "Максимальная мощность"
     },
     "ForkliftEditor": {
       "delete": "Удалить",
