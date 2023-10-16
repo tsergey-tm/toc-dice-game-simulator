@@ -229,11 +229,13 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
             <span>{t('StepEditor.ProcessorEditor.min')}: <input type="number"
                                                                 value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).min}
                                                                 min={0} max={100}
+                                                                title={t('StepEditor.ProcessorEditor.min_title')}
                                                                 onChange={event => setMin(event.target.value)}
             /><br/>
                 {t('StepEditor.ProcessorEditor.max')}: <input type="number"
                                                               value={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).max}
                                                               min={0} max={100}
+                                                              title={t('StepEditor.ProcessorEditor.max_title')}
                                                               onChange={event => setMax(event.target.value)}
                 /><br/></span>}
         {initParams.placeParams[indexParam.index - 1].errors?.length > 0 &&
