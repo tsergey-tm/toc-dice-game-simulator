@@ -12,6 +12,7 @@ import {GameLauncher, GameRunCallback, ShowEditorCallback} from "./GameLauncher"
 import ReactModal from 'react-modal';
 import {useTranslation} from "react-i18next";
 import {LanguageSwitcher} from "./i18n";
+import {HistoryResultContextProvider} from "./GameHistoryContext";
 
 const runGame: GameRunCallback = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult) => {
     new GameRunner(initParams, gameResult, setGameResult).run();
@@ -31,28 +32,31 @@ function App() {
         <div className="App">
             <GameResultContextProvider key="GameResultContextProvider">
                 <GameContextProvider key="GameContextProvider">
-                    <LanguageSwitcher/>
-                    {showEditor &&
-                        <div className="EditorDiv">
-                            <div className="EditorHelp">
-                                <button className="EditorHelpSign" title={t('EditorHelp.hint')}
-                                        onClick={() => setShowHelp(true)}>&#8263;</button>
-                                <ReactModal isOpen={showHelp}>
-                                    <button onClick={() => setShowHelp(false)}>{t('help.close')}</button>
-                                    <div className="HelpContent" dangerouslySetInnerHTML={{__html: t('help.text')}}/>
-                                    <button onClick={() => setShowHelp(false)}>{t('help.close')}</button>
-                                </ReactModal>
+                    <HistoryResultContextProvider key="GameContextProvider">
+                        <LanguageSwitcher/>
+                        {showEditor &&
+                            <div className="EditorDiv">
+                                <div className="EditorHelp">
+                                    <button className="EditorHelpSign" title={t('EditorHelp.hint')}
+                                            onClick={() => setShowHelp(true)}>&#8263;</button>
+                                    <ReactModal isOpen={showHelp}>
+                                        <button onClick={() => setShowHelp(false)}>{t('help.close')}</button>
+                                        <div className="HelpContent"
+                                             dangerouslySetInnerHTML={{__html: t('help.text')}}/>
+                                        <button onClick={() => setShowHelp(false)}>{t('help.close')}</button>
+                                    </ReactModal>
+                                </div>
+                                <PredefinedGames key="PredefinedGames"/>
+                                <GameParamsEditor hideEditor={hideEditorCallback} key="GameParamsEditor"/>
                             </div>
-                            <PredefinedGames key="PredefinedGames"/>
-                            <GameParamsEditor hideEditor={hideEditorCallback} key="GameParamsEditor"/>
-                        </div>
-                    }
-                    {!showEditor && <div>
-                        <GameLauncher runGame={runGame} showEditor={showEditorCallback} key="GameLauncher"/>
-                        <TotalGameGraph key="TotalGameGraph"/>
-                        <LastGameGraph key="LastGameGraph"/>
-                    </div>}
-                    <GameTable key="GameTable"/>
+                        }
+                        {!showEditor && <div>
+                            <GameLauncher runGame={runGame} showEditor={showEditorCallback} key="GameLauncher"/>
+                            <TotalGameGraph key="TotalGameGraph"/>
+                            <LastGameGraph key="LastGameGraph"/>
+                        </div>}
+                        <GameTable key="GameTable"/>
+                    </HistoryResultContextProvider>
                 </GameContextProvider>
             </GameResultContextProvider>
         </div>

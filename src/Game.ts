@@ -213,7 +213,7 @@ export class GameRunner {
                         const cnt = Math.min(leftCnt, rightCnt, power);
 
                         value.setCount(cnt).setMayCount(power).setMayCountAlowed(0);
-                        this.moveTasks(index, cnt, newRow, board, iteration);
+                        this.moveTasks(index, cnt, newRow, board, iteration, fl.random);
                     } else {
                         value.setCount(0).setMayCount(0).setMayCountAlowed(0);
                     }
@@ -234,13 +234,13 @@ export class GameRunner {
                     const cnt = Math.min(leftCnt, rightCnt, power);
 
                     value.setCount(cnt).setMayCount(power).setMayCountAlowed(0);
-                    this.moveTasks(index, cnt, newRow, board, iteration);
+                    this.moveTasks(index, cnt, newRow, board, iteration, fl.random);
                 }
             }
         });
     }
 
-    private moveTasks(index: number, cnt: number, newRow: StatData[], board: Board, iteration: number) {
+    private moveTasks(index: number, cnt: number, newRow: StatData[], board: Board, iteration: number, random: boolean) {
         if (cnt < 1) {
             return;
         }
@@ -253,7 +253,16 @@ export class GameRunner {
             }
         } else {
             for (let i = 0; i < cnt; i++) {
-                const task = board.columnTasks[index - 1].shift();
+                let task: Task | undefined;
+
+                if (random) {
+                    const size = board.columnTasks[index - 1].length;
+                    const pos = Math.floor(Math.random() * size);
+                    task = board.columnTasks[index - 1].splice(pos, 1)[0];
+                } else {
+                    task = board.columnTasks[index - 1].shift();
+                }
+
                 if (task !== undefined) {
                     board.columnTasks[index + 1].push(task.setLastTime(iteration));
                 }
@@ -274,7 +283,7 @@ export class GameRunner {
 
                     value.setCount(cnt).setMayCountAlowed(value.mayCountAlowed - cnt).setMayCount(power);
                     newRow[processorParam.secondaryFrom].setMayCountAlowed(power - cnt);
-                    this.moveTasks(index, cnt, newRow, board, iteration);
+                    this.moveTasks(index, cnt, newRow, board, iteration, processorParam.random);
                 } else {
                     const leftCnt = newRow[index - 1].isWarehouse() ? Number.MAX_SAFE_INTEGER : newRow[index - 1].count;
                     const rightCnt = (newRow[index + 1].limit === 0) ? Number.MAX_SAFE_INTEGER : (newRow[index + 1].limit - newRow[index + 1].count);
@@ -282,7 +291,7 @@ export class GameRunner {
                     const cnt = Math.min(leftCnt, rightCnt, power);
 
                     value.setCount(cnt).setMayCountAlowed(value.mayCountAlowed - cnt).setMayCount(power);
-                    this.moveTasks(index, cnt, newRow, board, iteration);
+                    this.moveTasks(index, cnt, newRow, board, iteration, processorParam.random);
                 }
             }
         }

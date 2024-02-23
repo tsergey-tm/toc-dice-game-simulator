@@ -40,6 +40,11 @@ export const PredefinedGames: FC = () => {
         </button>
         &nbsp; &nbsp;
         <button
+            onClick={() => setInitParams(InitParams.parse("H4sIABMU2GUAA6XRu2oCURAG4FeRvz6FbtSQKVOkTh9SCDEQMCF4SQoRZA2ksNJKLHyGFVm8wPoMM2_kv7uKFxCE0-ywzPznO4fp4gMSFIsObch9Wn8hgEMrL9-Ql27awxP_fiBVh09IyeEt-36xo1ONNNHIQo4c4w8OTUi72an3XH7EY94oOzQgpLLwuGB95ue6tdAGOMw-cza9mkONEEsH8l5rtOr72ESXOrehhcz9a2JDXRdKZz6BW_ypDXjARiPGffDADw-88Lvb8ICdE31E_U9j61_aXCxtrvqCnukiW1aiK9JxWjX2e3fZ690VP7zihVev4a-9HTgntL5XAwAA"))}>
+            {t('PredefinedGames.drum_buffer_rope_random')}
+        </button>
+        &nbsp; &nbsp;
+        <button
             onClick={() => setInitParams(InitParams.parse("H4sIALWGFmUAA6tWylSyMjIw0FEqUbIyB9HlSlZKSjpKxRCqQMkquhokpxQA5IHU6iglKlkZAqlSJau0xJziVB2lPKD0hRkXtl_YeLH7YtOFfRfbL-y92H1hp4IhUA_CPINaHYhRThC-iY5SjpKVGVT_rIvNQH27LmwA6oIpJMdOI7LsNKLITmO8dhoBQxVoKYgCmzARaGvLha0XG9DtNATbCXQcmpXzLmy-2HBhw4W9F3YArdwKoi9sJcKbMAsR3jShyJumZNlpSpGdZmh2xtYCANH3vv-zAgAA"))}>
             {t('PredefinedGames.kanban')}
         </button>

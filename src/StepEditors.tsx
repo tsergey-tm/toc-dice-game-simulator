@@ -142,6 +142,12 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
         setInitParams(newInitParams);
     }
 
+    function setRandom(value: boolean) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as ProcessorParam).random = value;
+        setInitParams(newInitParams);
+    }
+
     function setMin(value: string) {
         let newInitParams = initParams.clone();
         (newInitParams.placeParams[indexParam.index - 1] as ProcessorParam).min = Number(value);
@@ -223,7 +229,7 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
                           title={t('StepEditor.ProcessorEditor.union.hint')}
             /><label htmlFor={"unioncb-" + indexParam.index}
                      title={t('StepEditor.ProcessorEditor.union.hint')}
-            >title={t('StepEditor.ProcessorEditor.union.text')}</label><br/></span>)}
+            >{t('StepEditor.ProcessorEditor.union.text')}</label><br/></span>)}
         {((initParams.placeParams[indexParam.index - 1] as ProcessorParam).secondaryFrom === 0 ||
                 !(initParams.placeParams[indexParam.index - 1] as ProcessorParam).union) &&
             <span>{t('StepEditor.ProcessorEditor.min')}: <input type="number"
@@ -238,6 +244,13 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
                                                               title={t('StepEditor.ProcessorEditor.max_title')}
                                                               onChange={event => setMax(event.target.value)}
                 /><br/></span>}
+        <span><input type="checkbox" checked={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).random}
+                     id={"randomcb-" + indexParam.index}
+                     onChange={event => setRandom(event.target.checked)}
+                     title={t('StepEditor.ProcessorEditor.random.hint')}
+        /><label htmlFor={"randomcb-" + indexParam.index}
+                 title={t('StepEditor.ProcessorEditor.random.hint')}
+        >{t('StepEditor.ProcessorEditor.random.text')}</label><br/></span>
         {initParams.placeParams[indexParam.index - 1].errors?.length > 0 &&
             <span className="Error"
                   title={initParams.placeParams[indexParam.index - 1].errors.join('\n')}
@@ -254,6 +267,12 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
     function setVolume(value: string) {
         let newInitParams = initParams.clone();
         (newInitParams.placeParams[indexParam.index - 1] as ForkliftParam).volume = Number(value);
+        setInitParams(newInitParams);
+    }
+
+    function setRandom(value: boolean) {
+        let newInitParams = initParams.clone();
+        (newInitParams.placeParams[indexParam.index - 1] as ForkliftParam).random = value;
         setInitParams(newInitParams);
     }
 
@@ -337,6 +356,13 @@ export const ForkliftEditor: FC<IndexParam> = (indexParam) => {
         <input type="number" value={(initParams.placeParams[indexParam.index - 1] as ForkliftParam).stepDiv}
                min={1} max={100} onChange={event => setStepDiv(event.target.value)}/><br/></span>
         }
+        <span><input type="checkbox" checked={(initParams.placeParams[indexParam.index - 1] as ProcessorParam).random}
+                     id={"randomcb-" + indexParam.index}
+                     onChange={event => setRandom(event.target.checked)}
+                     title={t('StepEditor.ForkliftEditor.random.hint')}
+        /><label htmlFor={"randomcb-" + indexParam.index}
+                 title={t('StepEditor.ForkliftEditor.random.hint')}
+        >{t('StepEditor.ForkliftEditor.random.text')}</label><br/></span>
         {initParams.placeParams[indexParam.index - 1].errors?.length > 0 &&
             <span className="Error"
                   title={initParams.placeParams[indexParam.index - 1].errors.join('\n')}

@@ -3,6 +3,7 @@ import {InitParams, useGameContext} from "./GameContext";
 import {GameResult, SetGameResult, useGameResultContext} from "./GameResultContext";
 import "./GameLauncher.css"
 import {useTranslation} from "react-i18next";
+import {useHistoryResultContext} from "./GameHistoryContext";
 
 export type ShowEditorCallback = () => void;
 
@@ -18,6 +19,7 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
 
     const {initParams, setInitParams} = useGameContext();
     const {gameResult, setGameResult} = useGameResultContext();
+    const {historyResult, setHistoryResult} = useHistoryResultContext();
     const {t} = useTranslation();
 
 
@@ -25,6 +27,18 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
         let newInitParams = initParams.clone();
         newInitParams.expectedThroughput = Number(value);
         setInitParams(newInitParams);
+    }
+
+    function changeComparisonShow() {
+        let newHistoryResult = historyResult.clone();
+        newHistoryResult.isShowed = !newHistoryResult.isShowed;
+        setHistoryResult(newHistoryResult);
+    }
+
+    function storeComparison() {
+        let newHistoryResult = historyResult.clone();
+        newHistoryResult.store(gameResult);
+        setHistoryResult(newHistoryResult);
     }
 
     return <div className="GameLauncher">
@@ -38,5 +52,13 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
         &nbsp; &nbsp;
         <button onClick={() => params.showEditor()}
                 className="ShowGameEditorButton">{t('GameLauncher.show_editor')}</button>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <button onClick={() => storeComparison()}
+                className="StoreButton">{t('GameLauncher.comparison_store')}</button>
+        &nbsp; &nbsp;
+        {historyResult.throughputs.length > 0 ? <button onClick={() => changeComparisonShow()}
+                                                        className="StoreButton">{historyResult.isShowed ?
+            t('GameLauncher.comparison_hide') :
+            t('GameLauncher.comparison_show')}</button> : <span/>}
     </div>;
 }

@@ -1,6 +1,7 @@
 .LanguageSwitcher {
     background-color: var(--current-ltbackground);
     position: absolute;
+    z-index: 1000;
     top: 0;
     right: 0;
     margin: 0.1em;
@@ -12,7 +13,7 @@
     border-width: 1px;
     border-style: solid;
     border-color: var(--current-border);
-    z-index: 1;
+    z-index: 1001;
     background-color: var(--current-ltbackground);
     color: var(--current-foreground);
     cursor: pointer;

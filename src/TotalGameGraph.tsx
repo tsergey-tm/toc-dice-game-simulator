@@ -20,6 +20,7 @@ import {
 import {CanvasRenderer,} from 'echarts/renderers';
 import {EChartsOption, SeriesOption} from "echarts";
 import {useTranslation} from "react-i18next";
+import {useHistoryResultContext} from "./GameHistoryContext";
 
 // Register the required components
 echarts.use(
@@ -32,35 +33,94 @@ export const TotalGameGraph: FC = () => {
 
     const {initParams} = useGameContext();
     const {gameResult} = useGameResultContext();
+    const {historyResult} = useHistoryResultContext();
     const {t} = useTranslation();
 
     function makeFlowSeries(): SeriesOption[] {
 
-        let control: number[];
+        let data: number[];
         if (gameResult.throughputs.length > 0) {
-            control = gameResult.throughputs;
+            data = gameResult.throughputs;
         } else {
-            control = [0, 0, 0, 0, 1, 2, 5, 10, 9, 3, 1, 1, 0, 0, 1, 8, 6, 5, 3, 1, 0, 1, 0, 1, 0, 5, 0, 0, 0, 1];
+            data = [0, 0, 0, 0, 1, 2, 5, 10, 9, 3, 1, 1, 0, 0, 1, 8, 6, 5, 3, 1, 0, 1, 0, 1, 0, 5, 0, 0, 0, 1];
 
         }
         let sum = 0;
-        control.forEach(value => sum += value);
+        data.forEach(value => sum += value);
 
-        let serControlData: number[][] = [];
-        let serControlPercData: string[][] = [];
+        let serData: number[][] = [];
+        let serPercData: string[][] = [];
         let count = 0;
-        control.forEach((value, index) => {
+        data.forEach((value, index) => {
             if (value > 0) {
-                serControlData.push([index, value]);
+                serData.push([index, value]);
             }
             if (sum > 0) {
                 count += value;
-                serControlPercData.push([String(index), (100 * count / sum).toFixed(1)]);
+                serPercData.push([String(index), (100 * count / sum).toFixed(1)]);
             }
         });
 
+        let serHistoryData: number[][] = [];
+        let serHistoryPercData: string[][] = [];
+        if (historyResult.isShowed && gameResult.throughputs.length > 0) {
+            let sum = 0;
+            historyResult.throughputs.forEach(value => sum += value);
+
+            let count = 0;
+            historyResult.throughputs.forEach((value, index) => {
+                if (value > 0) {
+                    serHistoryData.push([index, value]);
+                }
+                if (sum > 0) {
+                    count += value;
+                    serHistoryPercData.push([String(index), (100 * count / sum).toFixed(1)]);
+                }
+            });
+
+        }
+
 
         return [
+            {
+                xAxisIndex: 0,
+                yAxisIndex: 0,
+                name: t('TotalGameGraph.throughput_distribution'),
+                type: 'bar',
+                barMaxWidth: 40,
+                itemStyle: {
+                    borderColor: "rgb(128,128,128)",
+                    color: "rgba(128,128,128)",
+                },
+                tooltip: {
+                    show: true
+                },
+                z: 0,
+                data: serHistoryData,
+            },
+            {
+                xAxisIndex: 0,
+                yAxisIndex: 1,
+                name: t('TotalGameGraph.throughput_perc'),
+                type: 'line',
+                itemStyle: {
+                    borderColor: "rgb(128,128,128)",
+                    color: "rgba(128,128,128)",
+                    opacity: 0
+                },
+                lineStyle: {
+                    color: "rgba(128,128,128)",
+                },
+                areaStyle: {
+                    origin: 'auto',
+                    opacity: 0
+                },
+                tooltip: {
+                    show: true
+                },
+                z: 1,
+                data: serHistoryPercData,
+            },
             {
                 xAxisIndex: 0,
                 yAxisIndex: 0,
@@ -85,7 +145,8 @@ export const TotalGameGraph: FC = () => {
                         },
                     ],
                 },
-                data: serControlData,
+                z: 2,
+                data: serData,
             },
             {
                 xAxisIndex: 0,
@@ -104,7 +165,8 @@ export const TotalGameGraph: FC = () => {
                     origin: 'auto',
                     opacity: 0
                 },
-                data: serControlPercData,
+                z: 3,
+                data: serPercData,
             }
         ];
     }
@@ -112,29 +174,48 @@ export const TotalGameGraph: FC = () => {
     function makeBufferSeries(): SeriesOption[] {
 
 
-        let control: number[];
+        let data: number[];
         if (gameResult.wips.length > 0) {
-            control = gameResult.wips;
+            data = gameResult.wips;
         } else {
-            control = [0, 0, 0, 0, 1, 2, 5, 10, 9, 3, 1, 1, 0, 0, 1, 8, 6, 5, 3, 1, 0, 1, 0, 1, 0, 5, 0, 0, 0, 1];
+            data = [0, 0, 0, 0, 1, 2, 5, 10, 9, 3, 1, 1, 0, 0, 1, 8, 6, 5, 3, 1, 0, 1, 0, 1, 0, 5, 0, 0, 0, 1];
 
         }
 
         let sum = 0;
-        control.forEach(value => sum += value);
+        data.forEach(value => sum += value);
 
-        let serControlData: number[][] = [];
-        let serControlPercData: string[][] = [];
+        let serData: number[][] = [];
+        let serPercData: string[][] = [];
         let count = 0;
-        control.forEach((value, index) => {
+        data.forEach((value, index) => {
             if (value > 0) {
-                serControlData.push([index, value]);
+                serData.push([index, value]);
             }
             if (sum > 0) {
                 count += value;
-                serControlPercData.push([String(index), (100 * count / sum).toFixed(1)]);
+                serPercData.push([String(index), (100 * count / sum).toFixed(1)]);
             }
         });
+
+        let serHistoryData: number[][] = [];
+        let serHistoryPercData: string[][] = [];
+        if (historyResult.isShowed && gameResult.wips.length > 0) {
+            let sum = 0;
+            historyResult.wips.forEach(value => sum += value);
+
+            let count = 0;
+            historyResult.wips.forEach((value, index) => {
+                if (value > 0) {
+                    serHistoryData.push([index, value]);
+                }
+                if (sum > 0) {
+                    count += value;
+                    serHistoryPercData.push([String(index), (100 * count / sum).toFixed(1)]);
+                }
+            });
+
+        }
 
 
         return [
@@ -145,10 +226,50 @@ export const TotalGameGraph: FC = () => {
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
+                    borderColor: "rgb(128,128,128)",
+                    color: "rgba(128,128,128)",
+                },
+                tooltip: {
+                    show: true
+                },
+                z: 0,
+                data: serHistoryData,
+            },
+            {
+                xAxisIndex: 1,
+                yAxisIndex: 3,
+                name: t('TotalGameGraph.wip_perc'),
+                type: 'line',
+                itemStyle: {
+                    borderColor: "rgb(128,128,128)",
+                    color: "rgba(128,128,128)",
+                    opacity: 0
+                },
+                lineStyle: {
+                    color: "rgba(128,128,128)",
+                },
+                areaStyle: {
+                    origin: 'auto',
+                    opacity: 0
+                },
+                tooltip: {
+                    show: true
+                },
+                z: 1,
+                data: serHistoryPercData,
+            },
+            {
+                xAxisIndex: 1,
+                yAxisIndex: 2,
+                name: t('TotalGameGraph.wip_distribution'),
+                type: 'bar',
+                barMaxWidth: 40,
+                itemStyle: {
                     borderColor: "rgb(127,255,64)",
                     color: "rgba(127,255,64,0.75)",
                 },
-                data: serControlData,
+                z: 2,
+                data: serData,
             },
             {
                 xAxisIndex: 1,
@@ -167,37 +288,96 @@ export const TotalGameGraph: FC = () => {
                     origin: 'auto',
                     opacity: 0
                 },
-                data: serControlPercData,
+                z: 3,
+                data: serPercData,
             }
         ];
     }
 
     function makeControlSeries(): SeriesOption[] {
 
-        let control: number[];
+        let data: number[];
         if (gameResult.controls.length > 0) {
-            control = gameResult.controls;
+            data = gameResult.controls;
         } else {
-            control = [0, 0, 0, 0, 1, 2, 5, 10, 9, 3, 1, 1, 0, 0, 1, 8, 6, 5, 3, 1, 0, 1, 0, 1, 0, 5, 0, 0, 0, 1];
+            data = [0, 0, 0, 0, 1, 2, 5, 10, 9, 3, 1, 1, 0, 0, 1, 8, 6, 5, 3, 1, 0, 1, 0, 1, 0, 5, 0, 0, 0, 1];
 
         }
         let sum = 0;
-        control.forEach(value => sum += value);
+        data.forEach(value => sum += value);
 
-        let serControlData: number[][] = [];
-        let serControlPercData: string[][] = [];
+        let serData: number[][] = [];
+        let serPercData: string[][] = [];
         let count = 0;
-        control.forEach((value, index) => {
+        data.forEach((value, index) => {
             if (value > 0) {
-                serControlData.push([index, value]);
+                serData.push([index, value]);
             }
             if (sum > 0) {
                 count += value;
-                serControlPercData.push([String(index), (100 * count / sum).toFixed(1)]);
+                serPercData.push([String(index), (100 * count / sum).toFixed(1)]);
             }
         });
 
+        let serHistoryData: number[][] = [];
+        let serHistoryPercData: string[][] = [];
+        if (historyResult.isShowed && gameResult.controls.length > 0) {
+            let sum = 0;
+            historyResult.controls.forEach(value => sum += value);
+
+            let count = 0;
+            historyResult.controls.forEach((value, index) => {
+                if (value > 0) {
+                    serHistoryData.push([index, value]);
+                }
+                if (sum > 0) {
+                    count += value;
+                    serHistoryPercData.push([String(index), (100 * count / sum).toFixed(1)]);
+                }
+            });
+
+        }
+
         return [
+            {
+                xAxisIndex: 2,
+                yAxisIndex: 4,
+                name: t('TotalGameGraph.lead_time_distribution'),
+                type: 'bar',
+                barMaxWidth: 40,
+                itemStyle: {
+                    borderColor: "rgb(128,128,128)",
+                    color: "rgba(128,128,128)",
+                },
+                tooltip: {
+                    show: true
+                },
+                z: 0,
+                data: serHistoryData,
+            },
+            {
+                xAxisIndex: 2,
+                yAxisIndex: 5,
+                name: t('TotalGameGraph.lead_time_perc'),
+                type: 'line',
+                itemStyle: {
+                    borderColor: "rgb(128,128,128)",
+                    color: "rgba(128,128,128)",
+                    opacity: 0
+                },
+                lineStyle: {
+                    color: "rgba(128,128,128)",
+                },
+                areaStyle: {
+                    origin: 'auto',
+                    opacity: 0
+                },
+                tooltip: {
+                    show: true
+                },
+                z: 1,
+                data: serHistoryPercData,
+            },
             {
                 xAxisIndex: 2,
                 yAxisIndex: 4,
@@ -208,7 +388,8 @@ export const TotalGameGraph: FC = () => {
                     borderColor: "rgb(102,140,255)",
                     color: "rgba(102,140,255,0.75)",
                 },
-                data: serControlData,
+                z: 2,
+                data: serData,
             },
             {
                 xAxisIndex: 2,
@@ -227,7 +408,8 @@ export const TotalGameGraph: FC = () => {
                     origin: 'auto',
                     opacity: 0
                 },
-                data: serControlPercData,
+                z: 3,
+                data: serPercData,
             }
         ];
     }
@@ -237,6 +419,15 @@ export const TotalGameGraph: FC = () => {
     let serBuffer: SeriesOption[] = makeBufferSeries();
 
     let serControl: SeriesOption[] = makeControlSeries();
+
+    const legendData = [
+        t('TotalGameGraph.throughput_distribution'),
+        t('TotalGameGraph.throughput_perc'),
+        t('TotalGameGraph.wip_distribution'),
+        t('TotalGameGraph.wip_perc'),
+        t('TotalGameGraph.lead_time_distribution'),
+        t('TotalGameGraph.lead_time_perc')
+    ];
 
     const options: EChartsOption = {
 
@@ -261,6 +452,7 @@ export const TotalGameGraph: FC = () => {
         legend: {
             show: true,
             top: 'bottom',
+            data: legendData
         },
         grid: [
             {

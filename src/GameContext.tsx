@@ -110,6 +110,7 @@ export abstract class MoverParam extends PlaceParam {
 
     secondaryFrom: number = 0;
     workersName: string = "";
+    random: boolean = false;
 
     protected constructor(type: string) {
         super(type);
@@ -165,6 +166,9 @@ export class ForkliftParam extends MoverParam {
         if (value.hasOwnProperty('w')) {
             this.workersName = value.w;
         }
+        if (value.hasOwnProperty('r')) {
+            this.random = value.r;
+        }
 
         return this;
     }
@@ -178,7 +182,8 @@ export class ForkliftParam extends MoverParam {
             'd': this.stepDiv,
             'n': this.name,
             'w': this.workersName,
-            's': this.secondaryFrom
+            's': this.secondaryFrom,
+            'r': this.random
         };
     }
 
@@ -203,6 +208,7 @@ export class ForkliftParam extends MoverParam {
         res.secondaryFrom = this.secondaryFrom;
         res.name = this.name;
         res.workersName = this.workersName;
+        res.random = this.random;
         res.volume = this.volume;
         res.stepDiv = this.stepDiv;
         res.stepMod = this.stepMod;
@@ -252,6 +258,9 @@ export class ProcessorParam extends MoverParam {
         if (value.hasOwnProperty('w')) {
             this.workersName = value.w;
         }
+        if (value.hasOwnProperty('r')) {
+            this.random = value.r;
+        }
 
         return this;
     }
@@ -265,7 +274,8 @@ export class ProcessorParam extends MoverParam {
             'u': this.union,
             'n': this.name,
             'w': this.workersName,
-            's': this.secondaryFrom
+            's': this.secondaryFrom,
+            'r': this.random
         };
     }
 
@@ -287,6 +297,7 @@ export class ProcessorParam extends MoverParam {
         res.secondaryFrom = this.secondaryFrom;
         res.name = this.name;
         res.workersName = this.workersName;
+        res.random = this.random;
         res.min = this.min;
         res.max = this.max;
         res.union = this.union;

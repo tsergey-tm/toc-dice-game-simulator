@@ -14,11 +14,15 @@
     "drum_buffer_rope_improvement_in_surplus_resource": "ББК с улучшением в избыточном ресурсе",
     "drum_buffer_rope_improvement_in_constraint": "ББК с улучшением в ограничении",
     "drum_buffer_rope_big_buffers": "ББК с увеличенными буферами",
-    "kanban": "Канбан"
+    "kanban": "Канбан",
+    "drum_buffer_rope_random": "ББК со случайным взятием задач"
   },
   "GameLauncher": {
     "expected_throughput": "Ожидаемый проход",
-    "show_editor": "Показать редактор"
+    "show_editor": "Показать редактор",
+    "comparison_store": "Сохранить для сравнения",
+    "comparison_show": "Показать сравнение",
+    "comparison_hide": "Скрыть сравнение"
   },
   "GameParamsEditor": {
     "iterations": "Итераций",
@@ -72,7 +76,11 @@
       "min": "Мин",
       "max": "Макс",
       "min_title": "Минимальная мощность",
-      "max_title": "Максимальная мощность"
+      "max_title": "Максимальная мощность",
+      "random": {
+        "text": "случайная",
+        "hint": "Процессор берёт случайную задачу из буфера"
+      }
     },
     "ForkliftEditor": {
       "delete": "Удалить",
@@ -85,7 +93,11 @@
         "secondary": "Ведомый от {{name}}"
       },
       "volume": "Объём",
-      "worked": "Работает"
+      "worked": "Работает",
+      "random": {
+        "text": "случайная",
+        "hint": "Перекладчик берёт случайную задачу из буфера"
+      }
     }
   },
   "EditorHelp": {
