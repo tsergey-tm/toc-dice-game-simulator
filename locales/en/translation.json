@@ -14,11 +14,15 @@
     "drum_buffer_rope_improvement_in_surplus_resource": "DBR with improvement in surplus resource",
     "drum_buffer_rope_improvement_in_constraint": "DBR with improvement in constraint",
     "drum_buffer_rope_big_buffers": "DBR with big buffers",
-    "kanban": "Kanban"
+    "kanban": "Kanban",
+    "drum_buffer_rope_random": "DBR with random"
   },
   "GameLauncher": {
     "expected_throughput": "Expected throughput",
-    "show_editor": "Show editor"
+    "show_editor": "Show editor",
+    "comparison_store": "Save to comparison",
+    "comparison_show": "Show comparison",
+    "comparison_hide": "Hide comparison"
   },
   "GameParamsEditor": {
     "iterations": "Iterations",
@@ -71,7 +75,11 @@
       "min": "Min",
       "max": "Max",
       "min_title": "Minimal power",
-      "max_title": "Maximal power"
+      "max_title": "Maximal power",
+      "random": {
+        "text": "random",
+        "hint": "The processor takes a random task from the buffer"
+      }
     },
     "ForkliftEditor": {
       "delete": "Delete",
@@ -84,7 +92,11 @@
         "secondary": "Secondary from {{name}}"
       },
       "volume": "Volume",
-      "worked": "Worked"
+      "worked": "Worked",
+      "random": {
+        "text": "random",
+        "hint": "The forklift takes a random task from the buffer"
+      }
     }
   },
   "EditorHelp": {
