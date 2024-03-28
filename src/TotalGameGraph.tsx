@@ -230,7 +230,7 @@ export const TotalGameGraph: FC = () => {
                     color: "rgba(128,128,128)",
                 },
                 tooltip: {
-                    show: true
+                    show: true,
                 },
                 z: 0,
                 data: serHistoryData,
@@ -441,7 +441,10 @@ export const TotalGameGraph: FC = () => {
             feature: {
                 saveAsImage: {
                     show: true,
-                }
+                },
+                dataZoom: {
+                    show: true
+                },
             }
         },
         tooltip: {

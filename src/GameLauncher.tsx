@@ -29,6 +29,15 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
         setInitParams(newInitParams);
     }
 
+    function showEditor() {
+        if (historyResult.isShowed) {
+            let newHistoryResult = historyResult.clone();
+            newHistoryResult.isShowed = !newHistoryResult.isShowed;
+            setHistoryResult(newHistoryResult);
+        }
+        params.showEditor();
+    }
+
     function changeComparisonShow() {
         let newHistoryResult = historyResult.clone();
         newHistoryResult.isShowed = !newHistoryResult.isShowed;
@@ -50,7 +59,7 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
                value={initParams.expectedThroughput}
                onChange={event => changeExpectedThroughput(event.target.value)}/>
         &nbsp; &nbsp;
-        <button onClick={() => params.showEditor()}
+        <button onClick={() => showEditor()}
                 className="ShowGameEditorButton">{t('GameLauncher.show_editor')}</button>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         <button onClick={() => storeComparison()}
