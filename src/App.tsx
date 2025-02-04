@@ -14,8 +14,20 @@ import {useTranslation} from "react-i18next";
 import {LanguageSwitcher} from "./i18n";
 import {HistoryResultContextProvider} from "./GameHistoryContext";
 
-const runGame: GameRunCallback = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult) => {
-    new GameRunner(initParams, gameResult, setGameResult).run();
+const runGame: GameRunCallback = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult, count: number) => {
+
+    setTimeout(() => {
+        let _gameResult: GameResult = gameResult.clone();
+
+        function _setGameResult(__gameResult: GameResult): void {
+            _gameResult = __gameResult;
+        }
+
+        for (let i = 0; i < count; i++) {
+            new GameRunner(initParams, _gameResult, _setGameResult).run();
+        }
+        setGameResult(_gameResult);
+    }, 0);
 }
 
 

@@ -4,7 +4,8 @@
     "close": "Закрыть"
   },
   "launcher": {
-    "run": "Запуск {{iterations}} итераций"
+    "run": "Запуск {{iterations}} итераций",
+    "run_games": "Запуск {{games}} раз по {{iterations}} итераций"
   },
   "PredefinedGames": {
     "predefined_games": "Готовые рецепты",

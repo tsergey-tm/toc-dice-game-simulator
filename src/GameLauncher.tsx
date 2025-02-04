@@ -7,7 +7,7 @@ import {useHistoryResultContext} from "./GameHistoryContext";
 
 export type ShowEditorCallback = () => void;
 
-export type GameRunCallback = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult) => void;
+export type GameRunCallback = (initParams: InitParams, gameResult: GameResult, setGameResult: SetGameResult, count: number) => void;
 
 export type GameParamsEditorParams = {
     runGame: GameRunCallback;
@@ -52,8 +52,12 @@ export const GameLauncher: FC<GameParamsEditorParams> = (params: GameParamsEdito
 
     return <div className="GameLauncher">
         <button disabled={initParams.errors().length > 0} id="runGame" className="RunGameButton"
-                onClick={() => params.runGame(initParams, gameResult, setGameResult)}
+                onClick={() => params.runGame(initParams, gameResult, setGameResult, 1)}
         >{t('launcher.run', {iterations: initParams.iterations})}</button>
+        &nbsp;
+        <button disabled={initParams.errors().length > 0} id="runGames" className="RunGameButton"
+                onClick={() => params.runGame(initParams, gameResult, setGameResult, 100)}
+        >{t('launcher.run_games', {iterations: initParams.iterations, games: 100})}</button>
         &nbsp; &nbsp;{t('GameLauncher.expected_throughput')}:
         <input type="number" min={1} max={10000}
                value={initParams.expectedThroughput}

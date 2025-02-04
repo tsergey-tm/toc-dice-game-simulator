@@ -4,7 +4,8 @@
     "close": "Close"
   },
   "launcher": {
-    "run": "Run {{iterations}} iterations"
+    "run": "Run {{iterations}} iterations",
+    "run_games": "Run {{games}} times with {{iterations}} iterations"
   },
   "PredefinedGames": {
     "predefined_games": "Predefined games",
