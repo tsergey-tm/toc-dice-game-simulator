@@ -150,6 +150,12 @@
     "wip_perc": "WIP percentile",
     "lead_time_distribution": "Lead time distribution",
     "lead_time_perc": "Lead time percentile",
+    "throughput_distribution_hist": "Throughput distribution (saved)",
+    "throughput_perc_hist": "Throughput percentile (saved)",
+    "wip_distribution_hist": "WIP distribution (saved)",
+    "wip_perc_hist": "WIP percentile (saved)",
+    "lead_time_distribution_hist": "Lead time distribution (saved)",
+    "lead_time_perc_hist": "Lead time percentile (saved)",
     "run_stat": "Aggregate statistics",
     "run_stat_example": "Aggregate statistics example"
   }

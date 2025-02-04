@@ -85,7 +85,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 0,
                 yAxisIndex: 0,
-                name: t('TotalGameGraph.throughput_distribution'),
+                name: t('TotalGameGraph.throughput_distribution_hist'),
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
@@ -101,7 +101,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 0,
                 yAxisIndex: 1,
-                name: t('TotalGameGraph.throughput_perc'),
+                name: t('TotalGameGraph.throughput_perc_hist'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgb(128,128,128)",
@@ -222,7 +222,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 1,
                 yAxisIndex: 2,
-                name: t('TotalGameGraph.wip_distribution'),
+                name: t('TotalGameGraph.wip_distribution_hist'),
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
@@ -238,7 +238,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 1,
                 yAxisIndex: 3,
-                name: t('TotalGameGraph.wip_perc'),
+                name: t('TotalGameGraph.wip_perc_hist'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgb(128,128,128)",
@@ -342,7 +342,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 2,
                 yAxisIndex: 4,
-                name: t('TotalGameGraph.lead_time_distribution'),
+                name: t('TotalGameGraph.lead_time_distribution_hist'),
                 type: 'bar',
                 barMaxWidth: 40,
                 itemStyle: {
@@ -358,7 +358,7 @@ export const TotalGameGraph: FC = () => {
             {
                 xAxisIndex: 2,
                 yAxisIndex: 5,
-                name: t('TotalGameGraph.lead_time_perc'),
+                name: t('TotalGameGraph.lead_time_perc_hist'),
                 type: 'line',
                 itemStyle: {
                     borderColor: "rgb(128,128,128)",
