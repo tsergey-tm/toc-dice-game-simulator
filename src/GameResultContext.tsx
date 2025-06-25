@@ -13,13 +13,42 @@ export class RowData {
     }
 }
 
+export class AggrData {
+    isBuffer: boolean;
+    unionTo: number;
+    count: number = 0;
+    may: number = 0;
+
+    constructor(isBuffer: boolean, unionTo: number) {
+        this.isBuffer = isBuffer;
+        this.unionTo = unionTo;
+    }
+
+    setCount(val: number) {
+        this.count = val;
+    }
+
+    addCount(val: number) {
+        this.count += val;
+    }
+
+    addMay(val: number) {
+        this.may += val;
+    }
+}
+
 export class GameResult {
     rows: RowData[][] = [];
+    aggr: AggrData[] = [];
     times: number[] = [];
 
     throughputs: number[] = [];
     wips: number[] = [];
     controls: number[] = [];
+
+    setAggr(aggr: AggrData[]) {
+        this.aggr = aggr;
+    }
 
     setRows(rows: RowData[][]) {
         this.rows = rows;

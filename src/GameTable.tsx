@@ -99,11 +99,27 @@ export const GameTable: FC = () => {
             })}
             <th><strong>{initParams.storeName === "" ? t('GameTable.output') : initParams.storeName}</strong></th>
         </tr>
+        {(gameResult.aggr.length > 0) &&
+            <tr>
+                <td>&nbsp;</td>
+                {gameResult.aggr.map((value, index) => {
+                    if (value.isBuffer) {
+                        return <th>{value.count}</th>
+                    } else {
+                        const i = value.unionTo > 0 ? value.unionTo : index;
+                        return <th>
+                            {gameResult.aggr[i].count.toFixed(0) + ' / ' + gameResult.aggr[i].may.toFixed(0)}
+                            <br/>{(gameResult.aggr[i].count * 100 / gameResult.aggr[i].may).toFixed(1)} %
+                        </th>
+                    }
+                })}
+            </tr>
+        }
         </thead>
         <tbody>
         {gameResult.rows.map(
             (value, index) =>
-                (<tr>
+                (<tr key={index}>
                     <td>{gameResult.rows.length - index - 1}</td>
                     {
                         value.map(

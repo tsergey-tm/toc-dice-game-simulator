@@ -1,5 +1,5 @@
 import {BufferParam, ForkliftParam, InitParams, ProcessorParam} from "./GameContext";
-import {GameResult, RowData, SetGameResult} from "./GameResultContext";
+import {AggrData, GameResult, RowData, SetGameResult} from "./GameResultContext";
 
 class Task {
     firstTime: number;
@@ -33,7 +33,7 @@ class StatData {
     // For a processor, the number of elements it can transfer in this step
     mayCount: number = 0;
     // For a processor, the number of elements it can transfer in this step after actions in other steps
-    mayCountAlowed: number = 0;
+    mayCountAllowed: number = 0;
     // For a buffer - buffer limit. If equal to 0, then there is no limit
     limit: number = 0;
 
@@ -51,8 +51,8 @@ class StatData {
         return this;
     }
 
-    setMayCountAlowed(val: number) {
-        this.mayCountAlowed = val;
+    setMayCountAllowed(val: number) {
+        this.mayCountAllowed = val;
         return this;
     }
 
@@ -94,7 +94,7 @@ class StatData {
             .setLimit(this.limit)
             .setCount(this.count)
             .setMayCount(this.mayCount)
-            .setMayCountAlowed(this.mayCountAlowed);
+            .setMayCountAllowed(this.mayCountAllowed);
     }
 }
 
@@ -158,11 +158,41 @@ export class GameRunner {
 
         const gameResult = this.gameResult.clone();
 
-        let rows: RowData[][] = [];
+        const aggrData: AggrData[] = [];
+        row.forEach((d, index) => {
+
+            let unionTo = 0;
+            if (index > 0 && index <= this.initParams.placeParams.length &&
+                this.initParams.placeParams[index - 1].type === ProcessorParam.LETTER &&
+                (this.initParams.placeParams[index - 1] as ProcessorParam).union
+            ) {
+                unionTo = (this.initParams.placeParams[index - 1] as ProcessorParam).secondaryFrom + 1;
+            }
+
+            const aggrDataItem = new AggrData(d.isStorage(), unionTo);
+            if (aggrDataItem.isBuffer) {
+                aggrDataItem.setCount(d.count);
+            }
+            aggrData.push(aggrDataItem);
+        });
+
+        const rows: RowData[][] = [];
         this.rowArr.forEach(value => {
-            rows.push(value.map(statData => new RowData(statData.isStorage(), statData.count, statData.mayCount)));
+            const rowData = [];
+            for (let i = 0; i < value.length; i++) {
+                const statData = value[i];
+                rowData.push(new RowData(statData.isStorage(), statData.count, statData.mayCount));
+
+                if (!statData.isStorage()) {
+                    const index = (aggrData[i].unionTo > 0) ? aggrData[i].unionTo : i;
+                    aggrData[index].addMay(statData.mayCount);
+                    aggrData[index].addCount(statData.count);
+                }
+            }
+            rows.push(rowData);
         });
         gameResult.setRows(rows);
+        gameResult.setAggr(aggrData);
 
         gameResult.setTimes(board
             .columnTasks[board.columnTasks.length - 1]
@@ -182,7 +212,7 @@ export class GameRunner {
             } else {
                 const processor = (this.initParams.placeParams[index - 1] as ProcessorParam);
                 let mc = Math.floor(Math.random() * (processor.max - processor.min + 1)) + processor.min;
-                res.push(value.clone().setMayCountAlowed(mc).setMayCount(mc));
+                res.push(value.clone().setMayCountAllowed(mc).setMayCount(mc));
             }
         });
 
@@ -192,7 +222,7 @@ export class GameRunner {
                 const secondaryFromIndex = processorParam.secondaryFrom;
                 if ((secondaryFromIndex > 0) && !processorParam.union) {
                     const mc = Math.min(value.mayCount, res[secondaryFromIndex].mayCount);
-                    value.setMayCountAlowed(mc).setMayCount(mc);
+                    value.setMayCountAllowed(mc).setMayCount(mc);
                 }
             }
         });
@@ -212,10 +242,10 @@ export class GameRunner {
                         const power = fl.volume;
                         const cnt = Math.min(leftCnt, rightCnt, power);
 
-                        value.setCount(cnt).setMayCount(power).setMayCountAlowed(0);
+                        value.setCount(cnt).setMayCount(power).setMayCountAllowed(0);
                         this.moveTasks(index, cnt, newRow, board, iteration, fl.random);
                     } else {
-                        value.setCount(0).setMayCount(0).setMayCountAlowed(0);
+                        value.setCount(0).setMayCount(0).setMayCountAllowed(0);
                     }
                 }
             }
@@ -233,7 +263,7 @@ export class GameRunner {
                     const power = newRow[fl.secondaryFrom].count;
                     const cnt = Math.min(leftCnt, rightCnt, power);
 
-                    value.setCount(cnt).setMayCount(power).setMayCountAlowed(0);
+                    value.setCount(cnt).setMayCount(power).setMayCountAllowed(0);
                     this.moveTasks(index, cnt, newRow, board, iteration, fl.random);
                 }
             }
@@ -278,19 +308,19 @@ export class GameRunner {
                 if ((processorParam.secondaryFrom > 0) && processorParam.union) {
                     const leftCnt = newRow[index - 1].isWarehouse() ? Number.MAX_SAFE_INTEGER : newRow[index - 1].count;
                     const rightCnt = (newRow[index + 1].limit === 0) ? Number.MAX_SAFE_INTEGER : (newRow[index + 1].limit - newRow[index + 1].count);
-                    const power = newRow[processorParam.secondaryFrom].mayCountAlowed;
+                    const power = newRow[processorParam.secondaryFrom].mayCountAllowed;
                     const cnt = Math.min(leftCnt, rightCnt, power);
 
-                    value.setCount(cnt).setMayCountAlowed(value.mayCountAlowed - cnt).setMayCount(power);
-                    newRow[processorParam.secondaryFrom].setMayCountAlowed(power - cnt);
+                    value.setCount(cnt).setMayCountAllowed(value.mayCountAllowed - cnt).setMayCount(power);
+                    newRow[processorParam.secondaryFrom].setMayCountAllowed(power - cnt);
                     this.moveTasks(index, cnt, newRow, board, iteration, processorParam.random);
                 } else {
                     const leftCnt = newRow[index - 1].isWarehouse() ? Number.MAX_SAFE_INTEGER : newRow[index - 1].count;
                     const rightCnt = (newRow[index + 1].limit === 0) ? Number.MAX_SAFE_INTEGER : (newRow[index + 1].limit - newRow[index + 1].count);
-                    const power = value.mayCountAlowed;
+                    const power = value.mayCountAllowed;
                     const cnt = Math.min(leftCnt, rightCnt, power);
 
-                    value.setCount(cnt).setMayCountAlowed(value.mayCountAlowed - cnt).setMayCount(power);
+                    value.setCount(cnt).setMayCountAllowed(value.mayCountAllowed - cnt).setMayCount(power);
                     this.moveTasks(index, cnt, newRow, board, iteration, processorParam.random);
                 }
             }

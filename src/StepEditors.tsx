@@ -33,6 +33,18 @@ function deleteParam(newInitParams: InitParams, index: number) {
     return newInitParams;
 }
 
+function makeSecondaryProcessor(newInitParams: InitParams, index: number) {
+
+    for (const el of newInitParams.placeParams) {
+        if (el.type === ProcessorParam.LETTER && (el as ProcessorParam).secondaryFrom === index + 1) {
+            (el as ProcessorParam).secondaryFrom = 0;
+            (el as ProcessorParam).union = false;
+        }
+    }
+
+    return newInitParams;
+}
+
 export const Adder: FC<IndexParam> = (indexParam) => {
 
     const {initParams, setInitParams} = useGameContext();
@@ -75,6 +87,7 @@ export const Adder: FC<IndexParam> = (indexParam) => {
         </ul>
     </div>
 }
+
 export const BufferEditor: FC<IndexParam> = (indexParam) => {
 
     const {initParams, setInitParams} = useGameContext();
@@ -161,8 +174,17 @@ export const ProcessorEditor: FC<IndexParam> = (indexParam) => {
     }
 
     function setSecondaryFrom(value: string) {
+        const val: number = Number(value);
+
         let newInitParams = initParams.clone();
-        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).secondaryFrom = Number(value);
+        (newInitParams.placeParams[indexParam.index - 1] as MoverParam).secondaryFrom = val;
+        if (
+            (val === 0) &&
+            (newInitParams.placeParams[indexParam.index - 1].type === ProcessorParam.LETTER)
+        ) {
+            (newInitParams.placeParams[indexParam.index - 1] as ProcessorParam).union = false;
+        }
+        makeSecondaryProcessor(newInitParams, indexParam.index - 1);
         setInitParams(newInitParams);
     }
 
